@@ -1,77 +1,191 @@
-import {View, Text, TextInput, StatusBar} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+  FlatList,
+  Pressable,
+} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import axios from 'axios';
+import {CustomContainer} from '../components';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList, RootTabParamList} from '../constants/types';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {CommonActions} from '@react-navigation/native';
 
-const HomeTab = () => {
+type ScreenRouteProps = RouteProp<
+  RootStackParamList,
+  'TransactionPaymentProof'
+>;
+
+type AmountProps = {
+  route: ScreenRouteProps;
+};
+
+const HomeTab: React.FC<AmountProps> = ({route}) => {
+  const navigation =
+    useNavigation<
+      NativeStackNavigationProp<RootTabParamList & RootStackParamList>
+    >();
+  const [commission, setCommission] = useState(0);
+  const [rate, setRate] = useState(0);
+  const [transactionHistory, setTransactionHistory] = useState([]);
+
+  const amount = parseFloat(route?.params?.amount) || 1000; // Default amount
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [commissionResponse, rateResponse, transactionHistoryResponse] =
+          await Promise.all([
+            axios.get('https://api.elrasilmobile.com/api/app/commmision/', {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization:
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
+              },
+            }),
+            axios.get('https://api.elrasilmobile.com/api/app/rate/', {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization:
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
+              },
+            }),
+            axios.get('https://api.elrasilmobile.com/API/app/transactions', {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization:
+                  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
+              },
+            }),
+          ]);
+
+        const transactionsWithColor = transactionHistoryResponse.data.map(
+          transaction => {
+            let color = '';
+            switch (transaction.PaymentStatus) {
+              case 'Pending':
+                color = '#F47F16';
+                break;
+              case 'Failed':
+                color = '#F44336';
+                break;
+              case 'Success':
+                color = '#66BB6B';
+                break;
+              default:
+                color = '#000000'; // default color if status doesn't match
+            }
+            return {...transaction, color};
+          },
+        );
+
+        setTransactionHistory(transactionsWithColor.reverse().slice(0, 6));
+        setCommission(commissionResponse.data.commission);
+        setRate(rateResponse.data.rate);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  // handle logout
+  const handleLogout = async () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'FinalizeOnboarding'}],
+      }),
+    );
+  };
+
+  const hexToRgba = (hex: string, opacity: number): string => {
+    let r = 0,
+      g = 0,
+      b = 0;
+    if (hex.length === 4) {
+      r = parseInt(hex[1] + hex[1], 16);
+      g = parseInt(hex[2] + hex[2], 16);
+      b = parseInt(hex[3] + hex[3], 16);
+    } else if (hex.length === 7) {
+      r = parseInt(hex[1] + hex[2], 16);
+      g = parseInt(hex[3] + hex[4], 16);
+      b = parseInt(hex[5] + hex[6], 16);
+    }
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  };
+
+  const Total = amount * rate + amount * rate * commission;
+
   return (
-    <View className="">
-      <View className="bg-background-accent py-8 pb-16 w-full flex   items-center">
-        {/* search header */}
-        <View className="flex flex-row justify-between gap-x-3 items-center">
-          <FontAwesome name="bell" size={23} color="#FFFFFF" />
-          <View
-            className="flex flex-row items-center gap-x-2 bg-background-accentLight/20
-       py-3 px-4 rounded-full justify-start">
-            <FontAwesome name="search" size={20} color="#FFFFFF" />
-            <TextInput
-              placeholder="Search 'Payments'"
-              className="w-8/12 bg-transparent text-xl py-1 "
-            />
-          </View>
-          <FontAwesome name="bell" size={23} color="#FFFFFF" />
-        </View>
-        {/* balance */}
-        <View className="flex flex-row gap-x-1 mt-4 items-center">
-          <Text className="text-white text-base "> US Dollars </Text>
-          <FontAwesome name="chevron-down" size={18} color="#FFFFFF" />
-        </View>
-        {/* balance number */}
-        <View>
+    <CustomContainer>
+      <StatusBar backgroundColor={'#304FFE'} barStyle={'light-content'} />
+      <View className="bg-background-accent pb-16 w-full flex items-center">
+        <Pressable
+          onPress={handleLogout}
+          className="flex justify-end items-end w-full pr-4 pt-2">
+          <AntDesign name="logout" size={25} color="#FFFFFF" />
+        </Pressable>
+        <View className="items-center">
           <Text className="text-white font-bold text-clip text-4xl mt-4">
-            $ 1,000.00
+            SDG {rate}
           </Text>
-          <Text className="text-white ">Available Balance</Text>
-          <View className="flex flex-row gap-x-2 items-center mt-2 bg-transparent border-2 border-white p-3 rounded-full">
+          <Text className="text-white">سعر الصرف</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('TransactionReceiverCountry')}
+            className="flex flex-row gap-x-2 items-center mt-2 bg-transparent border-2 border-white p-3 rounded-full">
             <FontAwesome name="plus-circle" size={18} color="#FFFFFF" />
-            <Text className="text-white text-base">Add Money</Text>
-          </View>
+            <Text className="text-white text-base">معاملة جديدة</Text>
+          </TouchableOpacity>
         </View>
       </View>
-      {/* actions */}
-      <View className="flex flex-row justify-between mx-5 items-center bg-white py-5 px-9 rounded-2xl -mt-10">
-        <View className="flex flex-col items-center">
-          <FontAwesome name="arrow-up" size={30} color="#304FFE" />
-          <Text className="text-black text-base">Send</Text>
-        </View>
-        <View className="flex flex-col items-center">
-          <FontAwesome name="arrow-up" size={30} color="#304FFE" />
-          <Text className="text-black text-base">Request</Text>
-        </View>
-        <View className="flex flex-col items-center">
-          <FontAwesome name="arrow-up" size={30} color="#304FFE" />
-          <Text className="text-black text-base">Bank</Text>
-        </View>
-      </View>
-      {/* transaction */}
-      <View className='flex flex-row justify-between items-center  mx-5 mt-5'>
+      <View className="flex flex-row justify-between items-center mb-3 ml-5 mr-2 mt-5">
         <Text className="text-content-secondary text-2xl font-semibold">
-          Transaction
+          المعاملات
         </Text>
-        <AntDesign name="arrowright" size={28} color="#2A2A2A" />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('TransactionsTab')}>
+          <AntDesign name="arrowright" size={28} color="#2A2A2A" />
+        </TouchableOpacity>
       </View>
-      {/* transaction list */}
-      <View className='bg-white py-5 px-8 rounded-lg flex flex-col items-center'>
-       <View className='flex flex-row '>
-        <FontAwesome name="arrow-up" size={30} color="#304FFE" />
-       </View>
-<View>
-  <Text className='text-black text-3xl self-center mt-9'>this page Still under development 💻🚀</Text>
-  <Text className='text-black text-3xl self-center mt-9'>ما زال قيد التطوير 💻🚀</Text>
-</View>
+      <View className="mx-5 rounded-2xl">
+        <FlatList
+          data={transactionHistory}
+          renderItem={({item}) => (
+            <View className="bg-white py-5 px-4 rounded-lg flex flex-row justify-between items-center">
+              <View className="flex flex-row items-center gap-x-2">
+                <Text
+                  style={{color: `${hexToRgba(item?.color, 1)}`}}
+                  className={`text-lg font-medium`}>
+                  ${item?.TransactionAmount}
+                </Text>
+              </View>
+              <View className="flex flex-row gap-x-2 items-center">
+                <Text className="text-lg  font-medium text-content-secondary">
+                  {item?.recieverName}
+                </Text>
+                <View
+                  style={{backgroundColor: `${hexToRgba(item?.color, 0.6)}`}}
+                  className={`flex  items-center justify-center  p-4 rounded-full `}
+                />
+              </View>
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={() => (
+            <View className="h-px w-[80%] self-center bg-content-tertiary/20" />
+          )}
+        />
       </View>
-      <StatusBar backgroundColor={'#304FFE'} />
-    </View>
+    </CustomContainer>
   );
 };
 

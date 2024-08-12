@@ -58,7 +58,7 @@ const FormField: React.FC<FormFieldProps> = ({
 
   // get Icon source
   const getIconSource = () => {
-    if (title === 'Password') return icons.lock;
+    if (title === 'Password' || title === 'كلمة المرور') return icons.lock;
     if (title === 'Date of Birth') return icons.date;
     if (title === 'Username') return icons.atSign;
     if (title === 'Email') return icons.mail;
@@ -102,14 +102,15 @@ const FormField: React.FC<FormFieldProps> = ({
           placeholder={placeholder}
           onChangeText={handleChangeText}
           placeholderTextColor={'#D0D0D0'}
-          secureTextEntry={title === 'Password' && !showPassword} // hide it if it's the password... | set showpassword to false
+          secureTextEntry={
+            (title === 'Password' || title === 'كلمة المرور') && !showPassword
+          } // hide it if it's the password... | set showpassword to false
           onBlur={() => error && shake()}
-          
           {...props}
         />
         {/* eye switch when it's a password */}
 
-        {title === 'Password' && (
+        {(title === 'Password' || title === 'كلمة المرور') && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Image
               // if show password is true so hide the password else show it

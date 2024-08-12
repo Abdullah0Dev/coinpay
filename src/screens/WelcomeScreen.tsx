@@ -12,29 +12,30 @@ const WelcomeScreen = () => {
 
   return (
     <>
-      <View className="flex items-center justify-start w-full">
+    {/*  className="flex items-center justify-start w-full" */}
+      <CustomWrapper progress={100}>
         <View className="h-[10%] " />
         <Image
-          source={images.onboardImage1}
+          source={images.welcome}
           resizeMode="contain"
           className="item-center"
         />
         <View className="mx-2 flex  flex-col items-center justify-center ">
           {/* title */}
           <Text className="text-4xl text-center text-content-primary font-bold">
-            Congratulations! {"\n"} Welcome to CoinPay
+            تهانينا! {"\n"} مرحبًا بك في الراسل
           </Text>
           {/* description */}
-          <Text className='text-base text-center mt-2  text-content-tertiary font-semibold'> We are happy to have you it's time to send, receive and track your expense </Text>
+          <Text className='text-base text-center mt-2  text-content-tertiary font-semibold'> نحن سعداء بوجودك، حان الوقت لإرسال واستقبال وتتبع نفقاتك </Text>
         </View>
-        <View className="h-[30%]" />
+        <View className="h-[25%]" />
         <CustomButton
-          title="Continue"
+          title="ابدأ"
           containerStyle={` bg-primary `}
           textStyle={` ' text-white'}  `}
-          handlePress={() => navigation.navigate('CardSetup')}
+          handlePress={() => navigation.navigate('Home')}
         />
-      </View>
+      </CustomWrapper>
     </>
   );
 };

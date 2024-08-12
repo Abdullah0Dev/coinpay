@@ -8,15 +8,12 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 
-const AddCountry = () => {
+const NewTransactionCountry = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [form, setForm] = useState({
     country: '',
-    address: '',
-    city: '',
-    postCode: '',
   });
 
   const [showCountryPicker, setShowCountryPicker] = useState(false);
@@ -26,15 +23,20 @@ const AddCountry = () => {
   } | null>(null);
 
   const countries = [
-    {label: 'Bangladesh', value: 'Bangladesh'},
-    {label: 'United States', value: 'United States'},
-    {label: 'Singapore', value: 'Singapore'},
-    {label: 'India', value: 'India'},
+    {name: 'مصر', code: 'EG'},
+    {name: 'تركيا', code: 'TR'},
+    {name: 'الهند', code: 'IN'},
+    {name: 'الباكستان', code: 'PK'},
+    {name: 'بنغلاديش', code: 'BD'},
+    {name: 'الفلبين', code: 'PH'},
+    {name: 'الامارات', code: 'AE'},
+    {name: 'الصين', code: 'CN'},
+    {name: 'اندنوسيا', code: 'ID'},
   ];
 
   const handleCountrySelect = (country: any) => {
-    setForm({...form, country: country.name.en}); // Adjust this as per your language preference
-    setSelectedCountry({name: country.name.en, code: country.code}); // Adjust this as per your language preference
+    setForm({...form, country: country.name});
+    setSelectedCountry({name: country.name, code: country.code});
     setShowCountryPicker(false);
   };
 
@@ -43,60 +45,68 @@ const AddCountry = () => {
   };
 
   return (
-    <CustomWrapper progress={30}>
+    <CustomWrapper progress={1}>
       <HeadInfo
-        title={'Country of residence'}
-        subtitle={'This info needs to be accurate with your ID document.'}
+        title={'بلد المستلم'}
+        subtitle={
+          'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
+        }
       />
       {/* Select country */}
       <View>
-        <Text className="text-content-secondary text-xl font-bold  ">
-          Country
-        </Text>
+        <Text className="text-content-secondary text-xl font-bold">البلد</Text>
 
         <TouchableOpacity
           onPress={() => setShowCountryPicker(true)}
-          className="flex-row items-center justify-start gap-x-3 border py-3 px-2 border-border-border rounded-2xl   mt-2">
+          className="flex-row items-center justify-start gap-x-3 border py-3 px-2 border-border-border rounded-2xl mt-2">
           {selectedCountry ? (
-            [
+            <>
               <CountryFlag
                 key="flag"
                 isoCode={selectedCountry.code}
                 size={20}
-              />,
-              <Text
-                key="name"
-                className="text-content-secondary text-xl ">
+              />
+              <Text key="name" className="text-content-secondary text-xl">
                 {selectedCountry?.name}
-              </Text>,
-            ]
+              </Text>
+            </>
           ) : (
-            <Text style={styles.placeholderText}>Select a country</Text>
+            <Text style={styles.placeholderText}>اختر دولة</Text>
           )}
         </TouchableOpacity>
 
-        <CountryPicker
-        lang='ar'
-          show={showCountryPicker}
-          pickerButtonOnPress={handleCountrySelect}
-          style={{
-            modal: {backgroundColor: 'white'},
-            countryName: {color: '#000', fontSize: 18},
-            dialCode: {color: 'transparent', fontSize: 18},
-          }}
-        />
+        {showCountryPicker && (
+          <View
+            // className='flex flex-col gap-y-3 py-3   rounded-2xl'
+
+            style={styles.pickerContainer}>
+            {countries.map(country => (
+              <TouchableOpacity
+                key={country.code}
+                onPress={() => handleCountrySelect(country)}
+                style={styles.countryItem}>
+                <CountryFlag isoCode={country.code} size={20} />
+                <Text style={styles.countryText}>{country.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
       </View>
 
       <View className="h-[61%]" />
       <CustomButton
-        title="Continue"
+        title="استمرار"
         containerStyle={` ${
           form.country === '' ? 'bg-content-disabled' : 'bg-primary'
         } `}
         textStyle={` ${
           form.country === '' ? 'text-content-tertiary' : 'text-white'
         } `}
-        handlePress={() => navigation.navigate('AddImageID')}
+        handlePress={() =>
+          navigation.navigate('TransactionReceiverName', {
+            receiverCountry: selectedCountry?.name || '',
+          })
+        }
       />
     </CustomWrapper>
   );
@@ -126,6 +136,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#999',
   },
+  pickerContainer: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  countryItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
 });
 
-export default AddCountry;
+export default NewTransactionCountry;

@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import {CountryPicker, CountryButton} from 'react-native-country-codes-picker';
-import {CustomButton} from '../components';
+import {CustomButton, CustomWrapper, HeadInfo} from '../components';
 import images from '../constants/images';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../constants/types';
 
 interface ListHeaderComponentProps {
   countries: any[]; // Adjust type as per your actual data structure
@@ -21,7 +23,7 @@ interface ListHeaderComponentProps {
   onPress: (country: any) => void; // Adjust type as per your onPress logic
 }
 
-  const ListHeaderComponent: React.FC<ListHeaderComponentProps> = ({
+const ListHeaderComponent: React.FC<ListHeaderComponentProps> = ({
   countries,
   lang,
   onPress,
@@ -29,7 +31,7 @@ interface ListHeaderComponentProps {
   return (
     <View style={{paddingBottom: 20}}>
       <Text style={{color: '#000', fontSize: 24, fontWeight: 'bold'}}>
-        Popular countries
+        الدول الشائعة
       </Text>
       {countries?.map((country, index) => (
         <CountryButton
@@ -48,9 +50,10 @@ interface ListHeaderComponentProps {
 };
 
 const SignUpScreen: React.FC = () => {
-  const navigation = useNavigation();
-  const [countryCode, setCountryCode] = useState<string>('+20');
-  const [countryIsoCode, setCountryIsoCode] = useState<string>('eg'); // State to hold the ISO code for CountryFlag
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [countryCode, setCountryCode] = useState<string>('+249');
+  const [countryIsoCode, setCountryIsoCode] = useState<string>('sd');
   const [show, setShow] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [confirmNumber, setConfirmNumber] = useState(false);
@@ -58,25 +61,23 @@ const SignUpScreen: React.FC = () => {
 
   const onSignup = () => {
     setConfirmNumber(true);
-    console.log('Signing up');
+    console.log('التسجيل');
+  };
+
+  const handleRegister = () => {
+    const RealPhoneNumber = countryCode + phoneNumber;
+    navigation.navigate('AddPersonalInfo', {RealPhoneNumber});
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior="padding"
-      keyboardVerticalOffset={keyboardVerticalOffset}>
-      <View style={{paddingHorizontal: 20, paddingTop: 40}}>
-        <Text className="text-content-primary font-bold text-3xl">
-          Create an Account!
-        </Text>
-        <Text className="text-content-secondary font-semibold text-lg">
-          Enter your phone number to verify your account
-        </Text>
-
-        <Text style={styles.label}>Phone</Text>
+    <>
+      <CustomWrapper progress={0}>
+        <HeadInfo
+          title={'إنشاء حساب '}
+          subtitle={' أدخل رقم هاتفك لتأمين حسابك'}
+        />
+        <Text style={styles.label}>الهاتف</Text>
         <View className="flex flex-row gap-x-1 items-center h-16">
-          {/* Country Code TextInput */}
           <TouchableOpacity
             className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
             onPress={() => setShow(true)}>
@@ -86,35 +87,38 @@ const SignUpScreen: React.FC = () => {
             </Text>
           </TouchableOpacity>
 
-          {/* Phone Number TextInput */}
           <TextInput
-            // style={[styles.input, { flex: 1 }]}
             className="flex-1 bg-white border py-4 border-black/40 rounded-xl px-2 text-lg text-content-primary"
-            placeholder="Mobile number"
+            placeholder="رقم الجوال"
             placeholderTextColor={'#00000071'}
             keyboardType="numeric"
+            maxLength={10}
             value={phoneNumber}
-            onChangeText={setPhoneNumber}
+            onChangeText={text => {
+              if (/^\d{0,10}$/.test(text)) {
+                setPhoneNumber(text);
+              }
+            }}
           />
         </View>
 
-        {/* Country Picker */}
         <CountryPicker
+          lang="ar"
           show={show}
           pickerButtonOnPress={item => {
             setCountryCode(item.dial_code);
-            setCountryIsoCode(item.code); // Set the ISO code for CountryFlag
+            setCountryIsoCode(item.code);
             setShow(false);
           }}
           ListHeaderComponent={props => (
             <ListHeaderComponent
               {...props}
-              countries={props.popularCountries}
+              countries={props.countries}
               lang={'en'}
               onPress={country => console.log(country)}
             />
           )}
-          popularCountries={['en', 'ar', 'pl']} // Adjust as per your requirement
+          popularCountries={['en', 'ar', 'pl']}
           style={{
             modal: {
               backgroundColor: 'white',
@@ -124,125 +128,57 @@ const SignUpScreen: React.FC = () => {
           }}
         />
 
-        {/* Confirm number absolute view */}
-        {confirmNumber && (
-          <View className="bg-black/20 absolute z-50 w-[100vw] h-[100vh] items-center justify-center ">
-            <View className=" p-5 bg-white w-[90%]  rounded-2xl justify-center items-center">
-              <Image source={images.onboardImage1} resizeMode="contain" />
-              <Text className="text-content-primary  text-2xl font-bold text-center mx-2">
-                Verify your phone number before we send code
-              </Text>
-              <Text className="text-content-tertiary  text-base font-semibold text-center mx-2">
-                is this correct?{' '}
-                <Text className="text-extrabold text-content-secondary text-lg">
-                  {' '}
-                  {phoneNumber}{' '}
-                </Text>
-              </Text>
-              <CustomButton
-                title="Yes, it is"
-                containerStyle="bg-primary mt-5"
-                handlePress={() =>  navigation.navigate('ConfirmPhone', phoneNumber)}
-              />
-              <CustomButton
-                title="No, edit"
-                containerStyle="bg-white border-primary/50 border-2 mt-2"
-                textStyle="text-primary"
-                handlePress={() => setConfirmNumber(false)}
-              />
-            </View>
-          </View>
-        )}
+        <View className="h-[50%] " />
 
-        {/* Spacer */}
-        <View className="h-[50vh] " />
-
-        {/* Sign up button */}
         <CustomButton
-          title="Sign up"
-          containerStyle={` ${
-            phoneNumber == '' ? 'bg-content-disabled' : 'bg-primary '
-          }  `}
-          textStyle={` ${
-            phoneNumber == '' ? 'text-content-tertiary' : ' text-white'
-          }  `}
+          title="التسجيل"
+          containerStyle={`${
+            phoneNumber === '' ? 'bg-content-disabled' : 'bg-primary'
+          }`}
+          textStyle={`${
+            phoneNumber === '' ? 'text-content-tertiary' : 'text-white'
+          }`}
           handlePress={onSignup}
         />
-      </View>
-    </KeyboardAvoidingView>
+      </CustomWrapper>
+      {confirmNumber && (
+        <View className="bg-black/20 absolute z-50 w-[100vw] h-[100vh] items-center justify-center ">
+          <View className="p-5 bg-white w-[90%] rounded-2xl justify-center items-center">
+            <Image source={images.onboardImage1} resizeMode="contain" />
+            <Text className="text-content-primary text-2xl font-bold text-center mx-2">
+              هل أنت متأكد أنك تريد استخدام هذا الرقم؟
+            </Text>
+            <Text className="text-content-tertiary text-base font-semibold text-center mx-2">
+              هل هذا صحيح؟{' '}
+              <Text className="text-extrabold text-content-secondary text-lg">
+                {phoneNumber}
+              </Text>
+            </Text>
+            <CustomButton
+              title="نعم، هو كذلك"
+              containerStyle="bg-primary mt-5"
+              handlePress={handleRegister}
+            />
+            <CustomButton
+              title="لا، عدل"
+              containerStyle="bg-white border-primary/50 border-2 mt-2"
+              textStyle="text-primary"
+              handlePress={() => setConfirmNumber(false)}
+            />
+          </View>
+        </View>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  headerText: {
-    color: '#000',
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  subHeaderText: {
-    color: '#666',
-    fontSize: 18,
-    fontWeight: '600',
-  },
   label: {
     color: '#000',
     marginTop: 20,
     fontSize: 20,
     fontWeight: 'bold',
     alignSelf: 'flex-start',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 50,
-    marginTop: 10,
-  },
-  countryCodeContainer: {
-    backgroundColor: '#fff',
-    borderColor: '#666',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 10,
-  },
-  countryCodeText: {
-    color: '#000',
-    fontSize: 18,
-  },
-  phoneNumberInput: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderColor: '#666',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    fontSize: 18,
-    color: '#000',
-  },
-  loginLink: {
-    color: '#000',
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 20,
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    borderRadius: 16,
-  },
-  enabled: {
-    backgroundColor: '#ffffffee',
-  },
-  disabled: {
-    backgroundColor: '#f0f0f0',
-  },
-  buttonText: {
-    color: '#000',
-    fontSize: 18,
-    fontWeight: '500',
   },
 });
 

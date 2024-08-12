@@ -19,6 +19,15 @@ import VerifyCard from './VerifyCard';
 import AddCard from './AddCard';
 import CardSetupScreen from './CardSetupScreen';
 import CardList from './CardList';
+import NotFoundScreen from './404';
+import PaymentReceipt from './PaymentReceipt';
+import NewTransactionAmount from './NewTransactionAmount';
+import NewTransactionCountry from './NewTransactionCountry';
+import NewTransactionEmail from './NewTransactionEmail';
+import NewTransactionName from './NewTransactionName';
+import NewTransactionPhone from './NewTransactionPhone';
+import NewTransactionProof from './NewTransactionProof';
+import NewTransactionPurpose from './NewTransactionPurpose';
 export {
   HomeScreen,
   AccountManagementScreen,
@@ -26,6 +35,15 @@ export {
   OnboardingScreen,
   AuthHandlingScreen,
   SignInScreen,
+  NotFoundScreen,
+  PaymentReceipt,
+  NewTransactionAmount,
+  NewTransactionCountry,
+  NewTransactionEmail,
+  NewTransactionName,
+  NewTransactionPhone,
+  NewTransactionProof,
+  NewTransactionPurpose,
   WelcomeScreen,
   VerifyCard,
   AddCard,

@@ -8,46 +8,44 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 const FinalizeOnboarding = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
- 
 
   return (
-    <View className="w-full h-full flex flex-col flex-1 items-center gap-y-16 ">
+    <View className="w-full h-full flex bg-white flex-col flex-1 items-center gap-y-16 ">
       <Image
-        source={images.onboardImage1}
+        source={images.signup}
         resizeMode="contain"
         className="item-center"
       />
       {/* title */}
       <View className="mx-2 items-center">
-        <Text className="text-3xl  text-center text-content-primary font-semibold">
-          Create your Coinpay account
+        <Text className="text-3xl text-center text-content-primary font-semibold">
+          أنشئ حسابك في الراسل
         </Text>
-        <Text className="text-lg text-center  text-content-secondary font-semibold">
-          Coinpay is a powerful tool that allows you to easily send, receive,
-          and track all your transactions
+        <Text className="text-lg text-center text-content-secondary font-semibold">
+          الراسل هو أداة قوية تتيح لك بسهولة إرسال واستقبال وتتبع جميع معاملاتك
         </Text>
       </View>
       <View className="w-full self-center items-center ">
         <CustomButton
           containerStyle=" bg-primary "
           handlePress={() =>navigation.navigate('SignUp')}
-          title="Sign up"
+          title="انشاء حساب"
         />
-        <CustomButton
+        <CustomButton 
           containerStyle=" bg-white border-primary/50 border-2 mt-5"
-          textStyle="text-black"
+          textStyle="text-primary"
           handlePress={() => navigation.navigate('SignIn')}
-          title="Log in"
+          title="تسجيل الدخول"
         />
       </View>
       <View className="">
-        <Text className="text-lg text-center  text-content-tertiary font-semibold ">
-          By continuing you accept our{' '}
-          <Text className="text-primary underline"> Term of Service </Text> and{' '}
-          <Text className="text-primary underline"> Privacy Policy </Text>
+        <Text className="text-lg text-center text-content-tertiary font-semibold ">
+          من خلال المتابعة، أنت تقبل{' '}
+          <Text className="text-primary underline"> شروط الخدمة </Text> و{' '}
+          <Text className="text-primary underline"> سياسة الخصوصية </Text>
         </Text>
       </View>
-    </View>
+    </View>     
   );
 };
 

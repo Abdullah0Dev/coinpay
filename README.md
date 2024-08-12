@@ -23,5 +23,6 @@ https://www.npmjs.com/package/react-native-image-picker
 __
   https://www.npmjs.com/package/react-native-vector-icons
 "react-native-vector-icons"
-
+___build apk____
+1. password: 123456
 -->

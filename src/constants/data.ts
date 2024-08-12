@@ -11,20 +11,20 @@ export interface OnboardingItemProps {
 const onboardingData: OnboardingItemProps[] = [
   {
     source: images.onboardImage1,
-    title: 'Trusted by millions of people, part of one part',
-    route: 'next',
+    title: 'أرسل أموالك من منزلك بأمان و سهولة',
+    route: 'التالي',
     active: 1,
   },
   {
     source: images.onboardImage2,
-    title: 'Spend money abroad, and track your expense',
-    route: 'next',
+    title: 'عملائنا هم الدليل على جودة خدماتنا ',
+    route: 'التالي',
     active: 2,
   },
   {
     source: images.onboardImage3,
-    title: 'Receive Money From Anywhere In The World',
-    route: 'next',
+    title: 'تابع تحويلاتك السابقة في أي وقت',
+    route: 'التالي',
     active: 3,
   },
 ];

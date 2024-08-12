@@ -11,30 +11,31 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {CommonActions} from '@react-navigation/native';
-
+import axios from 'axios';
 import {
+  Asset,
   ImageLibraryOptions,
   launchImageLibrary,
-  Asset,
 } from 'react-native-image-picker';
 import {Image} from 'react-native';
-import RNFS from 'react-native-fs';
 import client from '../api/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
-type ScreenRouteProps = RouteProp<RootStackParamList, 'AddImageID'>;
+type ScreenRouteProps = RouteProp<
+  RootStackParamList,
+  'TransactionPaymentProof'
+>;
 
-type ImageProps = {
+type EmailProps = {
   route: ScreenRouteProps;
 };
 
-const AddImageID: React.FC<ImageProps> = ({route}) => {
-  const {RealPhoneNumber, firstName, lastName, email, password} =
+const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
+  const {RealPhoneNumber, address, amount, name, purpose, receiverCountry} =
     route.params || {};
   const [idImage, setIdImage] = useState<Asset | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [date, setDate] = useState('')
+  const [transactionID, setTransactionID] = useState('')
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -53,7 +54,7 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
       setLoading(false);
     });
   };
-
+  
   const submitForm = async () => {
     const formData = new FormData();
     formData.append('ID', {
@@ -61,58 +62,59 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
       uri: idImage?.uri,
       type: idImage?.type,
     });
-    formData.append('mobile', RealPhoneNumber);
-    formData.append('firstname', firstName);
-    formData.append('lastname', lastName);
-    formData.append('email', email);
-    formData.append('password', password);
-    console.log(idImage, {...route.params});
-    console.log(`form data`, formData);
-
+    formData.append('recieverPhone', RealPhoneNumber);
+    formData.append('recieverEmail', address);
+    formData.append('Country', receiverCountry);
+    formData.append('TransactionAmount', amount);
+    formData.append('recieverName', name);
+    formData.append('purposeOfTransaction', purpose);
+    console.log('form data', formData);
+  
     setLoading(true);
-
+  
     try {
       const response = await axios.post(
-        'https://api.elrasilmobile.com/api/user/register',
+        'https://api.elrasilmobile.com/API/app/transaction',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
             Accept: 'application/json',
+            Authorization:
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
           },
-        },
+        }
       );
-
+  
       if (response.status !== 200) {
-        const message = `حدث خطأ: ${response.status} - ${response}`;
+        const message = `An error has occurred: ${response.status} - ${response.statusText}`;
         throw new Error(message);
       }
-
+  
       const data = response.data;
-      console.log('تم إنشاء المستخدم بنجاح:', data);
-      // After successful signup
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'SignIn'}],
-        }),
-      );
+      setDate(data?.createdAt); 
+      
+      setTransactionID(data?._id)
+      console.log('Transaction made successfully:', data, date, transactionID);
+      navigation.navigate('PaymentReceipt', { ...route.params, date, transactionID});
+  
     } catch (error) {
-      console.error('خطأ في إنشاء المستخدم:', error);
+      console.error('Error creating transaction:', error);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
-    <CustomWrapper progress={60}>
+    <CustomWrapper progress={100}>
       <HeadInfo
-        title={'قم بتحميل صورة لوثيقة الهوية الخاصة بك'}
+        title={'قم بتحميل صورة إثبات الدفع!'}
         subtitle={
-          'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'
+          'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
         }
       />
-      <TouchableOpacity
+       <TouchableOpacity
         onPress={pickImage}
         className={` ${
           loading || idImage ? 'bg-white' : 'h-52'
@@ -128,13 +130,11 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
         ) : (
           <View className="flex flex-col gap-y-1 items-center justify-center">
             <AntDesign name="upload" color={'#0A7AFF'} size={32} />
-            <Text className={'text-xl text-black '}>
-              قم بتحميل صورة الهوية الخاصة بك
-            </Text>
+            <Text className={'text-xl text-black '}>قم بتحميل صورة الهوية الخاصة بك</Text>
           </View>
         )}
       </TouchableOpacity>
-      <View className="h-[35vh]" />
+      <View className="h-[33vh]" />
       <CustomButton
         title="التالى"
         containerStyle={` ${
@@ -148,4 +148,4 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
   );
 };
 
-export default AddImageID;
+export default NewTransactionProof;

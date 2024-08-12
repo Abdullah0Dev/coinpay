@@ -71,7 +71,7 @@ const ConfirmPhone = () => {
           <Text className="text-primary  text-xl font-bold"> Resend </Text>
         </TouchableOpacity>
       </View>
-      <View className="h-[50vh]" />
+      <View className="h-[49vh]" />
       <View className=" items-center justify-center">
         <CustomButton
           title="Verify Your Number"

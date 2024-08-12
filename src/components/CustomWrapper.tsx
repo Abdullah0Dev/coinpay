@@ -1,4 +1,4 @@
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, StatusBar} from 'react-native';
 import React, {ReactNode} from 'react';
 
 type CustomWrapperProps = {
@@ -8,6 +8,7 @@ type CustomWrapperProps = {
 
 const CustomWrapper = ({children, progress = 0}: CustomWrapperProps) => {
   return (
+    <>
     <FlatList
       data={[{key: '1'}]}
       renderItem={() => (
@@ -19,11 +20,13 @@ const CustomWrapper = ({children, progress = 0}: CustomWrapperProps) => {
               className=" bg-primary rounded-full h-full"
             />
           </View>
-          <View className="mx-5">{children}</View>
+          <View className="mx-5 bg-white">{children}</View>
         </View>
       )}
       keyExtractor={(item, index) => index.toString()}
     />
+ <StatusBar backgroundColor={'#FFFFFF'} barStyle={'dark-content'} />
+</>
   );
 };
 

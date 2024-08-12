@@ -1,6 +1,6 @@
 import {View, Text, Image} from 'react-native';
 import React from 'react';
-import CustomButton from './CustomButton';
+import CustomButton from './CustomButton'; 
 import { OnboardingItemProps } from '../constants/data';
   
 
@@ -11,7 +11,7 @@ const OnboardingItem: React.FC<OnboardingItemProps & {handleNextPress: () => voi
       <Image
         source={source}
         resizeMode="contain"
-        className="item-center"
+        className="item-center" 
       />
       <View className="flex flex-row items-center justify-between w-28">
         <Image
@@ -36,7 +36,7 @@ const OnboardingItem: React.FC<OnboardingItemProps & {handleNextPress: () => voi
             {title}
         </Text>
       </View>
-      <CustomButton containerStyle=' bg-primary '  handlePress={handleNextPress} title="Next" />
+      <CustomButton containerStyle=' bg-primary '  handlePress={handleNextPress} title="التالي" />
     </View>
   );
 };

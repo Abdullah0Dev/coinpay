@@ -1,67 +1,130 @@
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, Dimensions, StyleSheet} from 'react-native';
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AccountTab, HomeTab, ReceiveMoneyTab, SendMoneyTab, TransactionsTab } from '../tabs';
-import { RootTabParamList } from '../constants/types'; 
-import Entypo from 'react-native-vector-icons/Entypo'
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  AccountTab,
+  HomeTab,
+  ReceiveMoneyTab,
+  SendMoneyTab,
+  TransactionsTab,
+} from '../tabs';
+import {RootTabParamList} from '../constants/types';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Octicons from 'react-native-vector-icons/Octicons';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import SupportScreen from './SupportScreen';
 type TabBarItemProps = {
-  source: any; // Adjust type according to your image sources
+  name: string;
   focused: boolean;
-  scanCode?: boolean; 
-};// home - spending - scan url - support - account -> home, money-bill-1-wave, qrcode, chat, user-large
-const TabItem: React.FC<TabBarItemProps> = ({source, focused, scanCode}) => {
-    const Icon = <Entypo name="home" size={30} color={focused ? 'blue' : 'black'} />;
-    const Icon2 = <FontAwesome6 name="money-bill-1-wave" size={30} color={focused ? 'blue' : 'black'} />;
-    return (
-      <View
-      style={{
-        backgroundColor: focused ? (scanCode ? 'red' : 'white') : 'white',
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: scanCode ? 5 : 0,
-      }}
-      className='w-78 h-8 bg-background-light rounded-md p-4 items-center justify-center flex'>
-      <Entypo name="home" size={30} color={focused ? 'blue' : 'black'} />
-      </View>
-    )
-  } 
+};
+
+const TabItem: React.FC<TabBarItemProps> = ({name, focused}) => {
+  let IconComponent;
+
+  switch (name) {
+    case 'HomeTab':
+      IconComponent = (
+        <Octicons
+          name="home"
+          size={26}
+          color={focused ? '#304FFF' : '#424242'}
+        />
+      );
+      break;
+    case 'Support':
+      IconComponent = (
+        <Ionicons
+          name="chatbubble-outline"
+          size={26}
+          color={focused ? '#304FFF' : '#424242'}
+        />
+      );
+      break;
+    case 'TransactionsTab':
+      IconComponent = (
+        <MaterialIcons
+          name="history-toggle-off"
+          size={26}
+          color={focused ? '#304FFF' : '#424242'}
+        />
+      );
+      break;
+    default:
+      IconComponent = (
+        <Octicons
+          name="home"
+          size={26}
+          color={focused ? '#304FFF' : '#424242'}
+        />
+      );
+      break;
+  }
+  return (
+    <View className="flex flex-col items-center">
+      <View className="  rounded-md p-4 items-center justify-center flex">
+        {IconComponent}
+         </View>
+      {focused && (
+        <View className="p-1 absolute bottom-[5px] rounded-full bg-[#304FFF]" />
+      )}
+    </View>
+  );
+};
 
 const HomeScreen = () => {
   const Tab = createBottomTabNavigator<RootTabParamList>();
-
-  return ( 
+  const width = Dimensions.get('window').width;
+  return (
     <>
-        <Tab.Navigator screenOptions={{ 
+      <Tab.Navigator
+        screenOptions={({route}) => ({
           headerShown: false,
+          tabBarShowLabel: false, // Hide labels
           tabBarStyle: {
-            backgroundColor: 'white',
-            borderTopColor: 'grey',
-            height: 70,
-            borderTopWidth: 0.2,
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.25, 
-            shadowRadius: 3.84,
-            elevation: 5, 
+            width: width * 0.9,
+            left: width * 0.05,
+            ...styles.tabBar,
           },
+          tabBarIcon: ({focused}) => (
+            <TabItem name={route.name} focused={focused} />
+          ),
           tabBarIconStyle: {
             justifyContent: 'center',
             alignItems: 'center',
           },
-          tabBarInactiveTintColor: 'black',
-          tabBarActiveTintColor: 'blue',
-        }}>
-      <Tab.Screen name="HomeTab" options={{  }} component={HomeTab} />
-      <Tab.Screen name="TransactionsTab" component={TransactionsTab} />
-      <Tab.Screen name="SendMoneyTab" component={SendMoneyTab} />
-      <Tab.Screen name="ReceiveMoneyTab" component={ReceiveMoneyTab} />
-      <Tab.Screen name="AccountTab" component={AccountTab} />
-    </Tab.Navigator>
+          tabBarInactiveTintColor: '#424242',
+          tabBarActiveTintColor: '#304FFF',
+        })}>
+        <Tab.Screen name="HomeTab" component={HomeTab} />
+        <Tab.Screen name="TransactionsTab" component={TransactionsTab} />
+        <Tab.Screen name="Support" component={SupportScreen} />
+      </Tab.Navigator>
     </>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 20, // Adjust this value to control the floating effect
+  },
+  tabBar: {
+    backgroundColor: 'white',
+    height: 70,
+    borderRadius: 15,
+    position: 'absolute', 
+    bottom: 20, // Adjust this value to control the floating effect
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+});
 
 export default HomeScreen;

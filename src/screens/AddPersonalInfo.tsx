@@ -1,23 +1,28 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {CustomButton, CustomWrapper, FormField, HeadInfo} from '../components';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 
-const AddPersonalInfo = () => {
+type ScreenRouteProps = RouteProp<RootStackParamList, 'AddPersonalInfo'>;
+
+type PersonalInfoProps = {
+  route: ScreenRouteProps;
+};
+const AddPersonalInfo: React.FC<PersonalInfoProps> = ({route}) => {
+  const {RealPhoneNumber} = route.params || {};
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const [isSubmitting, setSubmitting] = useState(false);
   const [nameError, setNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [birthDateError, setBirthDateError] = useState('');
-  const [form, setForm] = useState({ 
-    name: '',
-    username: '',
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
     birthDate: '',
   });
 
@@ -28,46 +33,48 @@ const AddPersonalInfo = () => {
     console.log(date);
   };
 
-  const submit = () => { 
-    console.log('submitting', form);
+  const submit = () => {
+    console.log('جاري الإرسال', form);
   };
 
   return (
     <>
-      <CustomWrapper progress={30}>
+      <CustomWrapper progress={20}>
         <HeadInfo
-          title={'Add you personal info'}
-          subtitle={'This info needs to be accurate with your ID document.'}
+          title={'أضف معلوماتك الشخصية'}
+          subtitle={
+            'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'
+          }
         />
         <FormField
-          title="Full Name"
-          value={form.name}
+          title="الاسم الأول"
+          value={form.firstName}
           setError={setNameError}
           error={nameError}
           handleChangeText={(e: any) => {
             setNameError('');
-            setForm({...form, name: e});
+            setForm({...form, firstName: e});
           }}
           otherStyles="mt-7"
           keyboardType="text"
-          placeholder={`Mr. John Doe`}
+          placeholder={`محمد`}
         />
         <FormField
-          title="Username"
-          value={form.username}
+          title="اسم العائلة"
+          value={form.lastName}
           setError={setUsernameError}
           error={usernameError}
           handleChangeText={(e: any) => {
             setNameError('');
-            setForm({...form, username: e});
+            setForm({...form, lastName: e});
           }}
           otherStyles="mt-7"
           keyboardType="text"
-          placeholder={`username`}
+          placeholder={`علي`}
         />
-        <TouchableOpacity onPress={() => setShowCalendar(true)}>
+        {/* <TouchableOpacity onPress={() => setShowCalendar(true)}>
           <FormField
-            title="Date of Birth"
+            title="تاريخ الميلاد"
             value={form.birthDate}
             setError={setBirthDateError}
             error={birthDateError}
@@ -77,22 +84,32 @@ const AddPersonalInfo = () => {
             placeholder={`MM/DD/YYYY`}
             editable={false}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <View className="h-[45vw]" />
+        <View className="h-[35vh]" />
         <CustomButton
-          title="Continue"
+          title="التالى"
           containerStyle={` ${
-            form.name == '' ? 'bg-content-disabled' : 'bg-primary '
+            form.firstName == '' && form.lastName == ''
+              ? 'bg-content-disabled'
+              : 'bg-primary '
           }  `}
           textStyle={` ${
-            form.name == '' ? 'text-content-tertiary' : ' text-white'
+            form.firstName == '' && form.lastName == ''
+              ? 'text-content-tertiary'
+              : ' text-white'
           }  `}
-          handlePress={() => navigation.navigate('AddCountry')}
+          handlePress={() =>
+            navigation.navigate('AddEmail', {
+              RealPhoneNumber: RealPhoneNumber,
+              firstName: form.firstName,
+              lastName: form.lastName,
+            })
+          }
         />
       </CustomWrapper>
       {/* Confirm number absolute view */}
-      {showCalendar && (
+      {/* {showCalendar && (
         <View className="bg-black/20 absolute z-50 w-full h-full items-center justify-center ">
           <View className=" p-5 bg-white w-[90%]  rounded-2xl justify-center items-center">
           <CalendarPicker
@@ -136,13 +153,13 @@ const AddPersonalInfo = () => {
               }}
             />
             <CustomButton
-              title="Confirm"
+              title="تأكيد"
               containerStyle="bg-primary mt-5"
               handlePress={() => setShowCalendar(false)}
             />
           </View>
         </View>
-      )}
+      )} */}
     </>
   );
 };

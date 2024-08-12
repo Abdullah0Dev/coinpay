@@ -1,32 +1,39 @@
 import {View, Text} from 'react-native';
 import React, {useState} from 'react';
 import {CustomButton, CustomWrapper, FormField, HeadInfo} from '../components';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 
-const AddEmail = () => {
+type ScreenRouteProps = RouteProp<RootStackParamList, 'AddEmail'>;
+
+type EmailProps = {
+  route: ScreenRouteProps;
+};
+const AddEmail: React.FC<EmailProps> = ({route}) => {
+  const {RealPhoneNumber, firstName, lastName} = route.params || {};
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [isSubmitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
   const submit = () => {
-    console.log('submitting', form);
+    console.log('جاري الإرسال', form);
   };
 
   return (
-    <CustomWrapper progress={30}>
+    <CustomWrapper progress={45}>
       <HeadInfo
-        title={'Add your email'}
-        subtitle={'This info needs to be accurate with your ID document.'}
+        title={'أضف بريدك الإلكتروني'}
+        subtitle={'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'}
       />
       <FormField
-        title="Email"
+        title="البريد الإلكتروني"
         value={form.email}
         setError={setEmailError}
         error={emailError}
@@ -36,18 +43,31 @@ const AddEmail = () => {
         }}
         otherStyles="mt-7"
         keyboardType="email-address"
-        placeholder={`name@example.com`}
+        placeholder={`mohammed@ali.com`}
       />
-      <View className="h-[55vh]" />
+      <FormField
+        title="كلمة المرور"
+        value={form.password}
+        setError={setPasswordError}
+        error={passwordError}
+        handleChangeText={(e: any) => {
+          setPasswordError('');
+          setForm({...form, password: e});
+        }}
+        otherStyles="mt-7"
+        keyboardType="default" 
+        placeholder={`كلمة المرور`}
+      />
+      <View className="h-[35vh]" />
       <CustomButton
-        title="Continue"
+        title="التالى"
         containerStyle={` ${
-          form.email == '' ? 'bg-content-disabled' : 'bg-primary '
+          form.email == '' ||  form.password == '' ? 'bg-content-disabled' : 'bg-primary '
         }  `}
         textStyle={` ${
-          form.email == '' ? 'text-content-tertiary' : ' text-white'
+          form.email == '' ||  form.password == '' ? 'text-content-tertiary' : ' text-white'
         }  `}
-        handlePress={() => navigation.navigate('AddAddress')}
+        handlePress={() => navigation.navigate('AddImageID', {...route.params, ...form})}
       />
     </CustomWrapper>
   );
