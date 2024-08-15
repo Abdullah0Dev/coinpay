@@ -72,7 +72,7 @@ const SignInScreen: React.FC = () => {
       //   }),
       // );
 
-      navigation.navigate("Welcome")
+      navigation.replace("Welcome")
     } catch (error: any) {
       console.error("couldn't sign in the user", error);
       Alert.alert('Error', error.message || 'Failed to sign in.');

@@ -28,13 +28,13 @@ const FinalizeOnboarding = () => {
       <View className="w-full self-center items-center ">
         <CustomButton
           containerStyle=" bg-primary "
-          handlePress={() =>navigation.navigate('SignUp')}
+          handlePress={() =>navigation.replace('SignUp')}
           title="انشاء حساب"
         />
         <CustomButton 
           containerStyle=" bg-white border-primary/50 border-2 mt-5"
           textStyle="text-primary"
-          handlePress={() => navigation.navigate('SignIn')}
+          handlePress={() => navigation.replace('SignIn')}
           title="تسجيل الدخول"
         />
       </View>
