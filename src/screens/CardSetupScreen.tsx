@@ -32,6 +32,7 @@ const CardSetupScreen = () => {
         </View>
         <View className=" h-[36%]" />
         <CustomButton
+        
           title="+ Add your card"
           containerStyle={` bg-primary self-center `}
           textStyle={` ' text-white'}  `}

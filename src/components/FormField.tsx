@@ -99,6 +99,7 @@ const FormField: React.FC<FormFieldProps> = ({
         <TextInput
           className="flex-1 text-content-secondary font-semibold text-lg"
           value={value}
+          
           placeholder={placeholder}
           onChangeText={handleChangeText}
           placeholderTextColor={'#D0D0D0'}

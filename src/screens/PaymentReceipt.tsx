@@ -5,7 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 import {RouteProp, useNavigation} from '@react-navigation/native';
-
+import {CustomButton, CustomWrapper, HeadInfo} from '../components';
 type ScreenRouteProps = RouteProp<RootStackParamList, 'PaymentReceipt'>;
 
 type AmountProps = {
@@ -118,8 +118,37 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
           )}
         />
       </View>
+      <View className='w-full items-center justify-center'>
+      <CustomButton
+        title="الصفحة الرئيسية"
+          handlePress={() => navigation.navigate("Home")}
+         /*
+
+        receiverCountry: string;
+        name: string;
+        RealPhoneNumber: string;
+        address: string;
+        purpose: string;
+        amount: string;
+        date: string;
+        transactionID: string;
+
+        _____
+                receiverCountry: string;
+        name: string;
+        RealPhoneNumber: string;
+        address: string;
+        purpose: string;
+        amount: string;
+        date: string;
+        transactionID: string;
+         */
+         containerStyle={`bg-primary` }
+        textStyle={` text-white `}
+      />
+      </View>
       <StatusBar backgroundColor={'#F7F7F7'} barStyle={'dark-content'} />
-    </CustomContainer>
+    </CustomContainer>  
   );
 };
 

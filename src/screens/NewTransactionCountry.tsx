@@ -95,6 +95,7 @@ const NewTransactionCountry = () => {
 
       <View className="h-[61%]" />
       <CustomButton
+          value={form.country}
         title="استمرار"
         containerStyle={` ${
           form.country === '' ? 'bg-content-disabled' : 'bg-primary'

@@ -90,6 +90,7 @@ const AddCard = () => {
       />
     </View>
       <CustomButton
+         value={form.address || form.city || form.postCode || form.email}
         title="Verify"
         containerStyle={` ${
           form.address == '' ? 'bg-content-disabled' : 'bg-primary '

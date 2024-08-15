@@ -88,6 +88,7 @@ const AddPersonalInfo: React.FC<PersonalInfoProps> = ({route}) => {
 
         <View className="h-[35vh]" />
         <CustomButton
+           value={form.birthDate || form.firstName || form.lastName}
           title="التالى"
           containerStyle={` ${
             form.firstName == '' && form.lastName == ''

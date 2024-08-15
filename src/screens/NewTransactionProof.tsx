@@ -4,10 +4,11 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Platform,
+  Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {CustomButton, CustomWrapper, HeadInfo} from '../components';
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {CommonActions, RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -19,6 +20,7 @@ import {
 } from 'react-native-image-picker';
 import {Image} from 'react-native';
 import client from '../api/client';
+import {useAuth} from '../context/AuthContext';
 
 type ScreenRouteProps = RouteProp<
   RootStackParamList,
@@ -34,8 +36,9 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
     route.params || {};
   const [idImage, setIdImage] = useState<Asset | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [date, setDate] = useState('')
-  const [transactionID, setTransactionID] = useState('')
+  const [date, setDate] = useState('');
+  const {token} = useAuth();
+  const [transactionID, setTransactionID] = useState('');
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -54,8 +57,18 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
       setLoading(false);
     });
   };
-  
   const submitForm = async () => {
+    if (!token) {
+      console.log('Token is not available');
+      // Navigate to Finalize Onboarding screen if token is not available
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'FinalizeOnboarding'}],
+        }),
+      );
+      return; // Exit early if no token is available
+    }
     const formData = new FormData();
     formData.append('ID', {
       name: idImage?.fileName,
@@ -69,9 +82,9 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
     formData.append('recieverName', name);
     formData.append('purposeOfTransaction', purpose);
     console.log('form data', formData);
-  
+
     setLoading(true);
-  
+
     try {
       const response = await axios.post(
         'https://api.elrasilmobile.com/API/app/transaction',
@@ -80,31 +93,41 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
           headers: {
             'Content-Type': 'multipart/form-data',
             Accept: 'application/json',
-            Authorization:
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
+            Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
-  
+
       if (response.status !== 200) {
         const message = `An error has occurred: ${response.status} - ${response.statusText}`;
         throw new Error(message);
       }
-  
+
       const data = response.data;
-      setDate(data?.createdAt); 
-      
-      setTransactionID(data?._id)
-      console.log('Transaction made successfully:', data, date, transactionID);
-      navigation.navigate('PaymentReceipt', { ...route.params, date, transactionID});
-  
+
+      // Update states and then navigate after the states are set
+      setDate(data?.createdAt);
+      setTransactionID(data?._id);
+
+      // Use useEffect to handle navigation after states are updated
     } catch (error) {
       console.error('Error creating transaction:', error);
+      Alert.alert(error.message);
     } finally {
       setLoading(false);
     }
   };
-  
+
+  // useEffect to navigate after states are updated
+  useEffect(() => {
+    if (date && transactionID) {
+      navigation.navigate('PaymentReceipt', {
+        ...route.params,
+        date,
+        transactionID,
+      });
+    }
+  }, [date, transactionID ]);
 
   return (
     <CustomWrapper progress={100}>
@@ -114,7 +137,7 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
           'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
         }
       />
-       <TouchableOpacity
+      <TouchableOpacity
         onPress={pickImage}
         className={` ${
           loading || idImage ? 'bg-white' : 'h-52'
@@ -130,12 +153,15 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
         ) : (
           <View className="flex flex-col gap-y-1 items-center justify-center">
             <AntDesign name="upload" color={'#0A7AFF'} size={32} />
-            <Text className={'text-xl text-black '}>قم بتحميل صورة الهوية الخاصة بك</Text>
+            <Text className={'text-xl text-black '}>
+              قم بتحميل صورة الهوية الخاصة بك
+            </Text>
           </View>
         )}
       </TouchableOpacity>
       <View className="h-[33vh]" />
       <CustomButton
+        value={idImage?.uri}
         title="التالى"
         containerStyle={` ${
           !idImage ? 'bg-content-disabled' : 'bg-primary '

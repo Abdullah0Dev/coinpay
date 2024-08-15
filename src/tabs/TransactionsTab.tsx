@@ -1,12 +1,20 @@
 import {View, Text, StatusBar, FlatList} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {CustomContainer} from '../components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
+import {useAuth} from '../context/AuthContext';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList, RootTabParamList } from '../constants/types';
 
 const TransactionsTab = () => {
-  const [transactionHistory, setTransactionHistory] = useState([])
-
+  const [transactionHistory, setTransactionHistory] = useState([]);
+  const {token} = useAuth();
+  const navigation =
+  useNavigation<
+    NativeStackNavigationProp<RootTabParamList & RootStackParamList>
+  >();
   const hexToRgba = (hex: string, opacity: number): string => {
     let r = 0,
       g = 0,
@@ -26,58 +34,68 @@ const TransactionsTab = () => {
   };
 
   useEffect(() => {
-  const fetchData = async () => {
-    try { 
-      const transactionHistoryData = await axios.get(
-        'https://api.elrasilmobile.com/API/app/transactions',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization:
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
-          },
-        },
+    if (!token) {
+      console.log('Token is not available');
+      // Navigate to Finalize Onboarding screen if token is not available
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'FinalizeOnboarding'}],
+        }),
       );
- 
-      // Add color based on PaymentStatus
-      const transactionsWithColor = transactionHistoryData.data.map(transaction => {
-        let color = '';
-        let icon = '';
-        switch (transaction.PaymentStatus) {
-          case 'Pending':
-            color = '#F47F16';
-            icon = 'warning'
-            break;
-          case 'Failed':
-            color = '#F44336';
-             icon = 'close';
-            break;
-          case 'Success':
-            color = '#66BB6B';
-            icon = 'check';
-            break;
-          default:
-            color = '#F47F16'; // default color if status doesn't match
-            icon = 'warning';
-        }
-        return { ...transaction, color, icon };
-      });
-
-       // Limit to 6 transactions
-       setTransactionHistory(transactionsWithColor.reverse());
-
- 
-    } catch (error) {
-      console.error('Error fetching data:', error);
+      return; // Exit early if no token is available
     }
-  };   
+    const fetchData = async () => {
+      try {
+        const transactionHistoryData = await axios.get(
+          'https://api.elrasilmobile.com/API/app/transactions',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
-  fetchData();
-const intervalId = setInterval(fetchData, 60000); // Fetch data every 60 seconds
+        // Add color based on PaymentStatus
+        const transactionsWithColor = transactionHistoryData.data.map(
+          transaction => {
+            let color = '';
+            let icon = '';
+            switch (transaction.PaymentStatus) {
+              case 'Pending':
+                color = '#F47F16';
+                icon = 'warning';
+                break;
+              case 'Failed':
+                color = '#F44336';
+                icon = 'close';
+                break;
+              case 'Success':
+                color = '#66BB6B';
+                icon = 'check';
+                break;
+              default:
+                color = '#F47F16'; // default color if status doesn't match
+                icon = 'warning';
+            }
+            return {...transaction, color, icon};
+          },
+        );
 
-  return () => clearInterval(intervalId); // Cleanup interval on component unmount
-}, []); // No dependencies to ensure the effect runs once on mount
+        // Limit to 6 transactions
+        setTransactionHistory(transactionsWithColor.reverse());
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 60000); // Fetch data every 60 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [token]); // No dependencies to ensure the effect runs once on mount
 
   return (
     <CustomContainer>

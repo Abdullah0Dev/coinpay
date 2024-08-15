@@ -49,7 +49,10 @@ const ListHeaderComponent: React.FC<ListHeaderComponentProps> = ({
   );
 };
 
-type ScreenRouteProps = RouteProp<RootStackParamList, 'TransactionReceiverPhone'>;
+type ScreenRouteProps = RouteProp<
+  RootStackParamList,
+  'TransactionReceiverPhone'
+>;
 
 type PhoneProps = {
   route: ScreenRouteProps;
@@ -62,12 +65,15 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
   const [countryIsoCode, setCountryIsoCode] = useState<string>('sd'); // State to hold the ISO code for CountryFlag
   const [show, setShow] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [confirmNumber, setConfirmNumber] = useState(false);   
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0; 
+  const [confirmNumber, setConfirmNumber] = useState(false);
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0;
   const RealPhoneNumber = countryCode + phoneNumber;
 
   const handleContinue = () => {
-    navigation.navigate('TransactionReceiverAddress', { ...route.params, RealPhoneNumber });
+    navigation.navigate('TransactionReceiverAddress', {
+      ...route.params,
+      RealPhoneNumber,
+    });
   };
 
   return (
@@ -101,8 +107,9 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
               placeholderTextColor={'#00000071'}
               keyboardType="numeric"
               value={phoneNumber}
-              onChangeText={(text) => {
-                if (/^\d{0,10}$/.test(text)) { // Ensures only numeric input up to 10 digits
+              onChangeText={text => {
+                if (/^\d{0,10}$/.test(text)) {
+                  // Ensures only numeric input up to 10 digits
                   setPhoneNumber(text);
                 }
               }}
@@ -111,7 +118,7 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
 
           {/* Country Picker */}
           <CountryPicker
-            lang='ar'
+            lang="ar"
             show={show}
             pickerButtonOnPress={item => {
               setCountryCode(item.dial_code);
@@ -122,11 +129,15 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
               <ListHeaderComponent
                 {...props}
                 countries={props.countries}
-                lang={'en'}
-                onPress={country => console.log(country)}
+                lang={'ar'}
+                onPress={country => {
+                  setCountryCode(country.dial_code);
+                  setCountryIsoCode(country.code);
+                  setShow(false);
+                }}
               />
             )}
-            popularCountries={['en', 'ar', 'pl']} // Adjust as per your requirement
+            popularCountries={['ar', 'en', 'fr']} // Adjust as per your requirement
             style={{
               modal: {
                 backgroundColor: 'white',
@@ -141,6 +152,7 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
 
           {/* Sign up button */}
           <CustomButton
+            value={phoneNumber}
             title="استمرار"
             containerStyle={` ${
               phoneNumber == '' ? 'bg-content-disabled' : 'bg-primary '

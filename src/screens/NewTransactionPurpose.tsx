@@ -47,6 +47,7 @@ const NewTransactionPurpose: React.FC<PhoneProps> = ({route}) => {
       />
       <View className="h-[49vh]" />
       <CustomButton
+         value={form.purpose || form.password}
         title="استمرار"
         containerStyle={` ${
           form.purpose == '' ? 'bg-content-disabled' : 'bg-primary '

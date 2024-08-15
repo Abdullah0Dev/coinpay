@@ -102,35 +102,41 @@ const SignUpScreen: React.FC = () => {
           />
         </View>
 
-        <CountryPicker
-          lang="ar"
-          show={show}
-          pickerButtonOnPress={item => {
-            setCountryCode(item.dial_code);
-            setCountryIsoCode(item.code);
-            setShow(false);
-          }}
-          ListHeaderComponent={props => (
-            <ListHeaderComponent
-              {...props}
-              countries={props.countries}
-              lang={'en'}
-              onPress={country => console.log(country)}
-            />
-          )}
-          popularCountries={['en', 'ar', 'pl']}
-          style={{
-            modal: {
-              backgroundColor: 'white',
-            },
-            countryName: {color: '#000', fontSize: 18},
-            dialCode: {color: '#000', fontSize: 18},
-          }}
-        />
+  {/* Country Picker */}
+  <CountryPicker
+            lang="ar"
+            show={show}
+            pickerButtonOnPress={item => {
+              setCountryCode(item.dial_code);
+              setCountryIsoCode(item.code); // Set the ISO code for CountryFlag
+              setShow(false);
+            }}
+            ListHeaderComponent={props => (
+              <ListHeaderComponent
+                {...props}
+                countries={props.countries}
+                lang={'ar'}
+                onPress={country => {
+                  setCountryCode(country.dial_code);
+                  setCountryIsoCode(country.code);
+                  setShow(false);
+                }}
+              />
+            )}
+            popularCountries={['ar', 'en', 'fr']} // Adjust as per your requirement
+            style={{
+              modal: {
+                backgroundColor: 'white',
+              },
+              countryName: { color: '#000', fontSize: 18 },
+              dialCode: { color: '#000', fontSize: 18 },
+            }}
+          />
 
         <View className="h-[50%] " />
 
         <CustomButton
+            value={phoneNumber}
           title="التسجيل"
           containerStyle={`${
             phoneNumber === '' ? 'bg-content-disabled' : 'bg-primary'

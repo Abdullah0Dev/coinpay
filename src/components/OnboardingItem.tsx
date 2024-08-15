@@ -36,7 +36,7 @@ const OnboardingItem: React.FC<OnboardingItemProps & {handleNextPress: () => voi
             {title}
         </Text>
       </View>
-      <CustomButton containerStyle=' bg-primary '  handlePress={handleNextPress} title="التالي" />
+      <CustomButton  containerStyle=' bg-primary '  handlePress={handleNextPress} title="التالي" />
     </View>
   );
 };

@@ -39,7 +39,7 @@ const CardList = () => {
       <View className='h-[50%]' />
 
       <View className="w-full self-center items-center ">
-        <CustomButton
+        <CustomButton 
           containerStyle=" bg-primary "
           handlePress={() => navigation.navigate('CardSetup')}
           title="+ Add your card"

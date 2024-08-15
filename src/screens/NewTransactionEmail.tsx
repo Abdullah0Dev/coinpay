@@ -47,6 +47,7 @@ const NewTransactionEmail: React.FC<PhoneProps> = ({route}) => {
       />
       <View className="h-[49vh]" />
       <CustomButton
+          value={form.address || form.password}
         title="استمرار"
         containerStyle={` ${
           form.address == '' ? 'bg-content-disabled' : 'bg-primary '

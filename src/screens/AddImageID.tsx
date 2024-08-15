@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Platform,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {CustomButton, CustomWrapper, HeadInfo} from '../components';
@@ -99,6 +100,7 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
       );
     } catch (error) {
       console.error('خطأ في إنشاء المستخدم:', error);
+      Alert.alert(error.message)
     } finally {
       setLoading(false);
     }
@@ -135,7 +137,7 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
         )}
       </TouchableOpacity>
       <View className="h-[35vh]" />
-      <CustomButton
+      <CustomButton 
         title="التالى"
         containerStyle={` ${
           !idImage ? 'bg-content-disabled' : 'bg-primary '

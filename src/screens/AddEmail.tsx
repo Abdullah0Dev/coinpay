@@ -60,6 +60,7 @@ const AddEmail: React.FC<EmailProps> = ({route}) => {
       />
       <View className="h-[35vh]" />
       <CustomButton
+         value={ form.password || form.email}
         title="التالى"
         containerStyle={` ${
           form.email == '' ||  form.password == '' ? 'bg-content-disabled' : 'bg-primary '

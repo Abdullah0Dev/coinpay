@@ -89,6 +89,7 @@ const AddCountry = () => {
 
       <View className="h-[61%]" />
       <CustomButton
+         value={form.address || form.city || form.postCode || form.country}
         title="Continue"
         containerStyle={` ${
           form.country === '' ? 'bg-content-disabled' : 'bg-primary'

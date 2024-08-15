@@ -8,6 +8,7 @@ type CustomButtonProps = {
   testStyles?: string;
   isLoading?: boolean;
   textStyle?: string;
+  value?: string;
 };
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -17,18 +18,17 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   testStyles,
   isLoading,
   textStyle,
+  value,
 }) => {
   return (
     <TouchableOpacity
       onPress={handlePress}
       activeOpacity={0.7}
       className={`  py-4 rounded-full w-[96%] flex flex-row justify-center items-center  ${containerStyle} ${
-        isLoading ? 'opacity-50' : ''
+        isLoading || value === '' ? 'opacity-50' : ''
       }  `}
-      disabled={isLoading}>
-      <Text className={`text-white  text-2xl ${textStyle} `}>
-        {title}
-      </Text>
+      disabled={value === ''}>
+      <Text className={`text-white  text-2xl ${textStyle} `}>{title}</Text>
       {isLoading && (
         <ActivityIndicator
           animating={isLoading}

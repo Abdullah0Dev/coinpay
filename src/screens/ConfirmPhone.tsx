@@ -74,6 +74,7 @@ const ConfirmPhone = () => {
       <View className="h-[49vh]" />
       <View className=" items-center justify-center">
         <CustomButton
+           value={value}
           title="Verify Your Number"
           containerStyle={` ${
             value == '' ? 'bg-content-disabled' : 'bg-primary '

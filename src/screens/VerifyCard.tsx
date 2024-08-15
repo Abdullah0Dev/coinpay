@@ -70,6 +70,7 @@ const VerifyCard = () => {
       <View className="h-[49vh]" />
       <View className=" items-center justify-center">
         <CustomButton
+        value={value}
           title="Verify"
           containerStyle={` ${
             value == '' ? 'bg-content-disabled' : 'bg-primary '

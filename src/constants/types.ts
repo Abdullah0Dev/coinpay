@@ -12,6 +12,8 @@ type RootStackParamList = {
         address: string;
         purpose: string;
         amount: string;
+        date: string;
+        transactionID: string;
       }
     | undefined;
   FinalizeOnboarding: undefined;
@@ -79,7 +81,22 @@ type RootStackParamList = {
   CardSetup: undefined;
   CardList: undefined;
   Support: undefined;
-  TransactionDetails: undefined;
+  TransactionDetails:
+    | {
+        receiverCountry: string;
+        name: string;
+        RealPhoneNumber: string;
+        address: string;
+        purpose: string;
+        amount: string;
+        date: string;
+        transactionID: string;
+        paymentProof: string;
+        status: string;
+        color: string;
+        icon: string;
+      }
+    | undefined;
 };
 
 type RootTabParamList = {

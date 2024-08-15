@@ -33,7 +33,7 @@ const AuthHandlingScreen = () => {
           handlePress={() => console.log('signup')}
           title="Sign up"
         />
-        <CustomButton
+        <CustomButton 
           containerStyle=" bg-white border-primary/50 border-2 mt-5"
           textStyle="text-black"
           handlePress={() => console.log('signin')}

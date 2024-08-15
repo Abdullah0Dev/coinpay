@@ -46,6 +46,7 @@ const NewTransactionName: React.FC<NameProps> = ({route}) => {
       />
       <View className="h-[49vh]" />
       <CustomButton
+          value={form.name || form.password}
         title="استمرار"
         containerStyle={` ${
           form.name == '' ? 'bg-content-disabled' : 'bg-primary '

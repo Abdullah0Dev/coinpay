@@ -5,6 +5,7 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 type ScreenRouteProps = RouteProp<
   RootStackParamList,
@@ -24,6 +25,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
     amount: '',
     password: '',
   });
+  const {token} = useAuth()
   const [commission, setCommission] = useState(0);
   const [rate, setRate] = useState(0);
   const conversionRate = 0.0017; // Conversion rate from SDG to USD
@@ -37,8 +39,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
             headers: {
               'Content-Type': 'application/json',
               Accept: 'application/json',
-              Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
+              Authorization: `Bearer ${token}`,
             },
           },
         );
@@ -49,8 +50,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
             headers: {
               'Content-Type': 'application/json',
               Accept: 'application/json',
-              Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YjEzYTA4YjI3NzBjMDZjM2Q3Yjk0OSIsImlhdCI6MTcyMzMwNTAzMCwiZXhwIjoxNzIzNDc3ODMwfQ.ROFmvnPszq84koJ3uUEzZfbPyeJvOutrGQZh7gy47XY',
+              Authorization: `Bearer ${token}`,
             },
           },
         );
@@ -72,7 +72,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
   }, [commission, rate]);
 
   // total amount
-  const {amount} = form; 
+  const {amount} = form;
   const numAmount = Number(amount);
   const Total = numAmount * rate + numAmount * rate * commission;
 
@@ -115,6 +115,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
       </View>
       <View className="h-[48vh]" />
       <CustomButton
+        value={form.amount || form.password}
         title="استمرار"
         containerStyle={` ${
           form.amount == '' ? 'bg-content-disabled' : 'bg-primary '
