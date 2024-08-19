@@ -110,9 +110,11 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
       setTransactionID(data?._id);
 
       // Use useEffect to handle navigation after states are updated
-    } catch (error) {
-      console.error('Error creating transaction:', error);
-      Alert.alert(error.message);
+    } catch (error: any) {
+      console.error("Couldn't sign in the user", error);
+      const errorMessage =
+      error.response?.data?.message || error.message || 'Failed to sign in.';
+    Alert.alert('Error', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -127,6 +129,8 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
         transactionID,
       });
     }
+    console.log("Proof Params stuff:", {TransactionFees: route.params.TransactionFees});
+    
   }, [date, transactionID ]);
 
   return (

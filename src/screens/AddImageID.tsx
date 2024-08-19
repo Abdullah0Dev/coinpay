@@ -19,10 +19,7 @@ import {
   launchImageLibrary,
   Asset,
 } from 'react-native-image-picker';
-import {Image} from 'react-native';
-import RNFS from 'react-native-fs';
-import client from '../api/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Image} from 'react-native'; 
 import axios from 'axios';
 
 type ScreenRouteProps = RouteProp<RootStackParamList, 'AddImageID'>;
@@ -32,7 +29,7 @@ type ImageProps = {
 };
 
 const AddImageID: React.FC<ImageProps> = ({route}) => {
-  const {RealPhoneNumber, firstName, lastName, email, password} =
+  const {RealPhoneNumber, firstName, lastName, password} =
     route.params || {};
   const [idImage, setIdImage] = useState<Asset | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,7 +62,7 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
     formData.append('mobile', RealPhoneNumber);
     formData.append('firstname', firstName);
     formData.append('lastname', lastName);
-    formData.append('email', email);
+    // formData.append('email', email);
     formData.append('password', password);
     console.log(idImage, {...route.params});
     console.log(`form data`, formData);
@@ -85,13 +82,13 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
       );
 
       if (response.status !== 200) {
-        const message = `حدث خطأ: ${response.status} - ${response}`;
+        const message = "المستخدم موجود بالفعل. تأكد من أنك قد أدخلت رقم هاتف مخصص واسم مستخدم مخصص.";
         throw new Error(message);
       }
 
       const data = response.data;
       console.log('تم إنشاء المستخدم بنجاح:', data);
-      // After successful signup
+      // After successful sign up
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -99,8 +96,11 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
         }),
       );
     } catch (error) {
-      console.error('خطأ في إنشاء المستخدم:', error);
-      Alert.alert(error.message)
+      const errorMessage =
+      error.response?.data?.message || error.message || 'Failed to sign up.';
+    Alert.alert('Error', errorMessage);
+    console.log(error.message);
+    
     } finally {
       setLoading(false);
     }

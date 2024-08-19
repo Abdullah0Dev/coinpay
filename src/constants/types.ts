@@ -14,6 +14,7 @@ type RootStackParamList = {
         amount: string;
         date: string;
         transactionID: string;
+        TransactionFees: number;
       }
     | undefined;
   FinalizeOnboarding: undefined;
@@ -24,8 +25,7 @@ type RootStackParamList = {
   AddImageID: {
     RealPhoneNumber: string;
     firstName: string;
-    lastName: string;
-    email: string;
+    lastName: string; 
     password: string;
   };
   AddAddress: undefined;
@@ -65,6 +65,7 @@ type RootStackParamList = {
     address: string;
     purpose: string;
     amount: string;
+    TransactionFees: number;
   };
   PaymentReceipt:
     | {
@@ -75,6 +76,7 @@ type RootStackParamList = {
         purpose: string;
         amount: string;
         date: string;
+        TransactionFees: number;
         transactionID: string;
       }
     | undefined;
@@ -95,12 +97,23 @@ type RootStackParamList = {
         status: string;
         color: string;
         icon: string;
+        TransactionFees: number;
       }
     | undefined;
 };
 
 type RootTabParamList = {
-  HomeTab: undefined;
+  HomeTab: {
+    receiverCountry: string;
+    name: string;
+    RealPhoneNumber: string;
+    address: string;
+    purpose: string;
+    amount: string;
+    date: string;
+    TransactionFees: number;
+    transactionID: string;
+  };
   TransactionsTab: undefined;
   SendMoneyTab: undefined;
   ReceiveMoneyTab: undefined;

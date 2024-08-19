@@ -4,17 +4,38 @@ import {CustomContainer} from '../components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
 import {useAuth} from '../context/AuthContext';
-import { CommonActions, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList, RootTabParamList } from '../constants/types';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList, RootTabParamList} from '../constants/types';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+
+type Transactions = {
+   
+    PaymentStatus: string;
+    recieverName: string;
+    recieverPhone: string;
+    address: string;
+    purposeOfTransaction: string;
+    TransactionAmount: string;
+    updatedAt: string;
+    senderID: string;
+    PaymentProof: string;
+    TransactionFees: string;
+    Country: string;
+    color: string;
+    icon: string;
+ 
+};
 
 const TransactionsTab = () => {
-  const [transactionHistory, setTransactionHistory] = useState([]);
+  const [transactionHistory, setTransactionHistory] = useState<Transactions[]>(
+    [],
+  );
   const {token} = useAuth();
   const navigation =
-  useNavigation<
-    NativeStackNavigationProp<RootTabParamList & RootStackParamList>
-  >();
+    useNavigation<
+      NativeStackNavigationProp<RootTabParamList & RootStackParamList>
+    >();
   const hexToRgba = (hex: string, opacity: number): string => {
     let r = 0,
       g = 0,
@@ -60,7 +81,7 @@ const TransactionsTab = () => {
 
         // Add color based on PaymentStatus
         const transactionsWithColor = transactionHistoryData.data.map(
-          transaction => {
+          (transaction: {PaymentStatus: string}) => {
             let color = '';
             let icon = '';
             switch (transaction.PaymentStatus) {
@@ -107,7 +128,25 @@ const TransactionsTab = () => {
       <FlatList
         data={transactionHistory}
         renderItem={({item}) => (
-          <View className="bg-white py-5 px-4 rounded-lg flex flex-row justify-between items-center">
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('TransactionDetails', {
+                receiverCountry: item?.Country,
+                name: item?.recieverName,
+                RealPhoneNumber: item?.recieverPhone,
+                address: item?.address,
+                purpose: item?.purposeOfTransaction,
+                amount: item?.TransactionAmount,
+                date: item?.updatedAt,
+                transactionID: item?.senderID,
+                paymentProof: item.PaymentProof,
+                status: item.PaymentStatus,
+                color: item.color,
+                icon: item.icon,
+                TransactionFees: item?.TransactionFees,
+              })
+            }
+            className="bg-white py-5 px-4 rounded-lg flex flex-row justify-between items-center">
             <View className="flex flex-row items-center gap-x-2">
               <Text
                 style={{color: `${hexToRgba(item?.color, 1)}`}}
@@ -126,7 +165,7 @@ const TransactionsTab = () => {
                 <AntDesign name={item.icon} size={15} color={'#FFFFFF'} />
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={() => (

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import {CountryPicker, CountryButton} from 'react-native-country-codes-picker';
-import {CustomButton, CustomWrapper, HeadInfo} from '../components';
+import {CountryPickerModal, CustomButton, CustomWrapper, HeadInfo} from '../components';
 import images from '../constants/images';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -66,8 +66,26 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
   const [show, setShow] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [confirmNumber, setConfirmNumber] = useState(false);
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0;
-  const RealPhoneNumber = countryCode + phoneNumber;
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0; 
+  const [showPicker, setShowPicker] = useState(false);
+  type SelectedCountry = {
+    name: string;
+    code: string;
+    dialCode: string;
+  } ;
+  
+  const [selectedCountry, setSelectedCountry] = useState<SelectedCountry>({
+    name: "السودان",  // Arabic for Sudan
+    code: "SD",
+    dialCode: "+249",
+  });
+  const RealPhoneNumber = selectedCountry?.dialCode + phoneNumber;
+ 
+
+
+  const handleCountrySelect = (country: SelectedCountry) => {
+    setSelectedCountry(country);
+  };
 
   const handleContinue = () => {
     navigation.navigate('TransactionReceiverAddress', {
@@ -92,13 +110,11 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
           <View className="flex flex-row gap-x-1 items-center h-16">
             {/* Country Code TextInput */}
             <TouchableOpacity
-              className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
-              onPress={() => setShow(true)}>
-              <CountryFlag isoCode={countryIsoCode} size={20} />
-              <Text className="text-content-secondary text-lg">
-                {countryCode}
-              </Text>
-            </TouchableOpacity>
+          className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
+          onPress={() => setShowPicker(true)}>
+          <CountryFlag isoCode={selectedCountry?.code} size={20} />
+          <Text className="text-content-secondary text-lg">{selectedCountry?.dialCode}</Text> 
+        </TouchableOpacity>
 
             {/* Phone Number TextInput */}
             <TextInput
@@ -117,35 +133,12 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
           </View>
 
           {/* Country Picker */}
-          <CountryPicker
-            lang="ar"
-            show={show}
-            pickerButtonOnPress={item => {
-              setCountryCode(item.dial_code);
-              setCountryIsoCode(item.code); // Set the ISO code for CountryFlag
-              setShow(false);
-            }}
-            ListHeaderComponent={props => (
-              <ListHeaderComponent
-                {...props}
-                countries={props.countries}
-                lang={'ar'}
-                onPress={country => {
-                  setCountryCode(country.dial_code);
-                  setCountryIsoCode(country.code);
-                  setShow(false);
-                }}
-              />
-            )}
-            popularCountries={['ar', 'en', 'fr']} // Adjust as per your requirement
-            style={{
-              modal: {
-                backgroundColor: 'white',
-              },
-              countryName: {color: '#000', fontSize: 18},
-              dialCode: {color: '#000', fontSize: 18},
-            }}
-          />
+          <CountryPickerModal
+        show={showPicker}
+        onClose={() => setShowPicker(false)}
+        onSelect={handleCountrySelect}
+      />
+
 
           {/* Spacer */}
           <View className="h-[48vh] " />

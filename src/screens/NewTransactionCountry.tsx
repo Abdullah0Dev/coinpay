@@ -34,6 +34,7 @@ const NewTransactionCountry = () => {
     {name: 'اندنوسيا', code: 'ID'},
   ];
 
+  
   const handleCountrySelect = (country: any) => {
     setForm({...form, country: country.name});
     setSelectedCountry({name: country.name, code: country.code});

@@ -1,5 +1,6 @@
 import {View, Text, FlatList} from 'react-native';
 import React, {ReactNode} from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type CustomContainerProps = {
   children: ReactNode;
@@ -8,6 +9,7 @@ type CustomContainerProps = {
 
 const CustomContainer = ({children, className = ''}: CustomContainerProps) => {
   return (
+    <SafeAreaView>
     <FlatList
       data={[{key: '1'}]}
       renderItem={() => (
@@ -15,6 +17,7 @@ const CustomContainer = ({children, className = ''}: CustomContainerProps) => {
       )}
       keyExtractor={(item, index) => index.toString()}
     />
+    </SafeAreaView>
   );
 };
 

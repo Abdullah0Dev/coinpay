@@ -1,16 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
-// Define the types for context values
 interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;
+  isLoading: boolean;
 }
 
-// Define the default values for context
 const AuthContext = createContext<AuthContextType>({
   token: null,
   setToken: () => {},
+  isLoading: true,
 });
 
 interface AuthProviderProps {
@@ -19,6 +19,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadToken = async () => {
@@ -26,14 +27,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (savedToken) {
         setToken(savedToken);
       }
+      setIsLoading(false);
     };
 
     loadToken();
-  }, [token]);
-
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ token, setToken, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

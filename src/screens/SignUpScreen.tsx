@@ -11,41 +11,42 @@ import {
 } from 'react-native';
 import CountryFlag from 'react-native-country-flag';
 import {CountryPicker, CountryButton} from 'react-native-country-codes-picker';
-import {CustomButton, CustomWrapper, HeadInfo} from '../components';
+import {CountryPickerModal, CustomButton, CustomWrapper, HeadInfo} from '../components';
 import images from '../constants/images';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 interface ListHeaderComponentProps {
   countries: any[]; // Adjust type as per your actual data structure
   lang: string;
   onPress: (country: any) => void; // Adjust type as per your onPress logic
 }
-
+ 
 const ListHeaderComponent: React.FC<ListHeaderComponentProps> = ({
   countries,
   lang,
   onPress,
 }) => {
-  return (
-    <View style={{paddingBottom: 20}}>
-      <Text style={{color: '#000', fontSize: 24, fontWeight: 'bold'}}>
-        الدول الشائعة
-      </Text>
-      {countries?.map((country, index) => (
-        <CountryButton
-          key={index}
-          item={country}
-          name={country?.name?.[lang || 'en']}
-          onPress={() => onPress(country)}
-          style={{
-            countryName: {color: '#000', fontSize: 18},
-            dialCode: {color: '#000', fontSize: 18},
-          }}
-        />
-      ))}
-    </View>
+  return ( 
+      <View style={{paddingVertical: 39}}>
+        <Text style={{color: '#000', fontSize: 24, fontWeight: 'bold'}}>
+          الدول الشائعة
+        </Text>
+        {countries?.map((country, index) => (
+          <CountryButton
+            key={index}
+            item={country}
+            name={country?.name?.[lang || 'en']}
+            onPress={() => onPress(country)}
+            style={{
+              countryName: {color: '#000', fontSize: 18},
+              dialCode: {color: '#000', fontSize: 18},
+            }}
+          />
+        ))}
+      </View> 
   );
 };
 
@@ -58,6 +59,26 @@ const SignUpScreen: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [confirmNumber, setConfirmNumber] = useState(false);
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 80 : 0;
+  const [showPicker, setShowPicker] = useState(false);
+  type SelectedCountry = {
+    name: string;
+    code: string;
+    dialCode: string;
+  } ;
+  
+  const [selectedCountry, setSelectedCountry] = useState<SelectedCountry>({
+    name: "السودان",  // Arabic for Sudan
+    code: "SD",
+    dialCode: "+249",
+  });
+  const RealPhoneNumber = selectedCountry?.dialCode + phoneNumber;
+ 
+
+
+  const handleCountrySelect = (country: SelectedCountry) => {
+    setSelectedCountry(country);
+  };
+
 
   const onSignup = () => {
     setConfirmNumber(true);
@@ -65,7 +86,7 @@ const SignUpScreen: React.FC = () => {
   };
 
   const handleRegister = () => {
-    const RealPhoneNumber = countryCode + phoneNumber;
+    const RealPhoneNumber = selectedCountry?.dialCode + phoneNumber;
     navigation.navigate('AddPersonalInfo', {RealPhoneNumber});
   };
 
@@ -78,14 +99,12 @@ const SignUpScreen: React.FC = () => {
         />
         <Text style={styles.label}>الهاتف</Text>
         <View className="flex flex-row gap-x-1 items-center h-16">
-          <TouchableOpacity
-            className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
-            onPress={() => setShow(true)}>
-            <CountryFlag isoCode={countryIsoCode} size={20} />
-            <Text className="text-content-secondary text-lg">
-              {countryCode}
-            </Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
+          onPress={() => setShowPicker(true)}>
+          <CountryFlag isoCode={selectedCountry?.code} size={20} />
+          <Text className="text-content-secondary text-lg">{selectedCountry?.dialCode}</Text> 
+        </TouchableOpacity>
 
           <TextInput
             className="flex-1 bg-white border py-4 border-black/40 rounded-xl px-2 text-lg text-content-primary"
@@ -102,41 +121,18 @@ const SignUpScreen: React.FC = () => {
           />
         </View>
 
-  {/* Country Picker */}
-  <CountryPicker
-            lang="ar"
-            show={show}
-            pickerButtonOnPress={item => {
-              setCountryCode(item.dial_code);
-              setCountryIsoCode(item.code); // Set the ISO code for CountryFlag
-              setShow(false);
-            }}
-            ListHeaderComponent={props => (
-              <ListHeaderComponent
-                {...props}
-                countries={props.countries}
-                lang={'ar'}
-                onPress={country => {
-                  setCountryCode(country.dial_code);
-                  setCountryIsoCode(country.code);
-                  setShow(false);
-                }}
-              />
-            )}
-            popularCountries={['ar', 'en', 'fr']} // Adjust as per your requirement
-            style={{
-              modal: {
-                backgroundColor: 'white',
-              },
-              countryName: { color: '#000', fontSize: 18 },
-              dialCode: { color: '#000', fontSize: 18 },
-            }}
-          />
+        {/* Country Picker */}
+        <CountryPickerModal
+        show={showPicker}
+        onClose={() => setShowPicker(false)}
+        onSelect={handleCountrySelect}
+      />
+
 
         <View className="h-[50%] " />
 
         <CustomButton
-            value={phoneNumber}
+          value={phoneNumber}
           title="التسجيل"
           containerStyle={`${
             phoneNumber === '' ? 'bg-content-disabled' : 'bg-primary'

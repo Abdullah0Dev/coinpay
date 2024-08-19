@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // value type
 type AsyncStorageValue = number | boolean | object | string | null;
 

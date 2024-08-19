@@ -12,8 +12,7 @@ welcome (done)
 add card
 home
 __after isha___
-send
-
+send 
 I can't do it on windows, you'll just setup these packages:
 https://reactnavigation.org/docs/getting-started/
 "@react-navigation/native"

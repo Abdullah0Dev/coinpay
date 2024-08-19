@@ -29,6 +29,7 @@ const TransactionDetailsScreen: React.FC<AmountProps> = ({route}) => {
     icon,
     paymentProof,
     purpose,
+    TransactionFees,
   } = route.params || {};
   console.log({...route.params});
 
@@ -84,7 +85,7 @@ const TransactionDetailsScreen: React.FC<AmountProps> = ({route}) => {
     },
     {
       item: 'رسوم الخدمة',
-      value: '380.00 SSP',
+         value: `${TransactionFees} SGD`,
     },
     {
       item: 'رقم الهاتف',

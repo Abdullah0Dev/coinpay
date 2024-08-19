@@ -1,6 +1,5 @@
-import {View, Text, ActivityIndicator} from 'react-native';
-import React, {useState} from 'react';
-import {useEffect} from 'react';
+import {View, ActivityIndicator, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -36,124 +35,168 @@ import {
   NewTransactionAmount,
   NewTransactionProof,
 } from './src/screens';
-import {getItem} from './utils/AsyncStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import {AuthProvider, useAuth} from './src/context/AuthContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-const App = () => {
+// Define the LoadingScreen component
+const LoadingScreen: React.FC = () => (
+  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <ActivityIndicator size="large" color="#0000ff" />
+    <Text>Loading...</Text>
+  </View>
+);
+
+// Define the MainComponent to render navigation based on token and onboarding status
+const MainComponent: React.FC<{
+  token: string | null;
+  onboarded: number | null;
+}> = ({token, onboarded}) => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
-  const [showOnboarded, setShowOnboarded] = useState<boolean | null>(null);
-  const {token} = useAuth();
-  useEffect(() => {
-    checkIfAlreadyOnboarded();
-  }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      SplashScreen.hide(); // Hide the splash screen after a delay
-    }, 4000); // Adjust the delay time (4000ms = 4 seconds)
+  // Determine the initial route based on token and onboarding status
+  const initialRouteName = !token
+    ? 'FinalizeOnboarding'
+    : onboarded === 200
+    ? 'Home'
+    : 'Onboarding';
 
-    return () => clearTimeout(timeout); // Cleanup if the component unmounts
-  }, []);
-
-  const checkIfAlreadyOnboarded = async () => {
-    const onboarded = await getItem('onboarded');
-    if (onboarded === 200) {
-      // successfully onboarded, don't show onboarding screen once again
-      setShowOnboarded(false);
-      console.log(`it's value should be 200:`, onboarded);
-    } else {
-      // didn't onboard, show onboarding screen
-      setShowOnboarded(true);
-      console.log(`it's value is:`, onboarded);
-    }
-  };
-
-  if (showOnboarded === null) {
-    return (
-      <View className="flex flex-1 justify-center items-center">
-        <ActivityIndicator size={'large'} color={'#F3F3F3'} />
-      </View>
-    );
-  }
   return (
-    <>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={initialRouteName}>
+        <Stack.Screen name="NotFound" component={NotFoundScreen} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen
+          name="TransactionReceiverCountry"
+          component={NewTransactionCountry}
+        />
+        <Stack.Screen
+          name="TransactionReceiverName"
+          component={NewTransactionName}
+        />
+        <Stack.Screen
+          name="TransactionReceiverPhone"
+          component={NewTransactionPhone}
+        />
+        <Stack.Screen
+          name="TransactionReceiverAddress"
+          component={NewTransactionEmail}
+        />
+        <Stack.Screen
+          name="TransactionPurpose"
+          component={NewTransactionPurpose}
+        />
+        <Stack.Screen
+          name="TransactionAmount"
+          component={NewTransactionAmount}
+        />
+        <Stack.Screen
+          name="TransactionPaymentProof"
+          component={NewTransactionProof}
+        />
+        <Stack.Screen name="PaymentReceipt" component={PaymentReceipt} />
+        <Stack.Screen name="AuthHandling" component={AuthHandlingScreen} />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="ConfirmPhone" component={ConfirmPhone} />
+        <Stack.Screen
+          name="FinalizeOnboarding"
+          component={FinalizeOnboarding}
+        />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="AddImageID" component={AddImageID} />
+        <Stack.Screen name="AddEmail" component={AddEmail} />
+        <Stack.Screen name="AddAddress" component={AddAddress} />
+        <Stack.Screen name="AddPersonalInfo" component={AddPersonalInfo} />
+        <Stack.Screen name="AddCountry" component={AddCountry} />
+        <Stack.Screen name="AddCard" component={AddCard} />
+        <Stack.Screen name="VerifyCard" component={VerifyCard} />
+        <Stack.Screen name="CardSetup" component={CardSetupScreen} />
+        <Stack.Screen name="CardList" component={CardList} />
+        <Stack.Screen
+          name="TransactionDetails"
+          component={TransactionDetailsScreen}
+        />
+        <Stack.Screen
+          name="AccountManagement"
+          component={AccountManagementScreen}
+        />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+const App: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [token, setToken] = useState<string | null>(null);
+  const [onboarded, setOnboarded] = useState<number | null>(null);
+  const {isLoading: authLoading} = useAuth();
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        const fetchedToken = await AsyncStorage.getItem('token');
+        const fetchedOnboarded = await AsyncStorage.getItem('onboarded');
+        const tokenCreationTime = await AsyncStorage.getItem(
+          'tokenCreationTime',
+        ); // Get token creation time
+
+        const now = new Date().getTime();
+        const oneDayInMs = 24 * 60 * 60 * 1000;
+
+        if (fetchedToken && tokenCreationTime) {
+          const creationTime = Number(tokenCreationTime);
+          if (now - creationTime > oneDayInMs) {
+            // Token expired
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('tokenCreationTime');
+            setToken(null);
+            setOnboarded(null);
+          } else {
+            // Token is valid
+            setToken(fetchedToken);
+          }
+        } else {
+          // No token found or token creation time not available
+          setToken(null);
+        }
+
+        setOnboarded(fetchedOnboarded ? Number(fetchedOnboarded) : null);
+
+        if (authLoading) {
+          setIsLoading(true);
+          return;
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
+        setToken(null); // Handle error case
+        setOnboarded(null);
+      } finally {
+        setIsLoading(false);
+        SplashScreen.hide(); // Hide the splash screen once initialization is complete
+      }
+    };
+
+    initializeApp();
+  }, [authLoading]);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  console.log(`Token now: ${token}`);
+  console.log(`Onboarding now: ${onboarded}`);
+
+  return (
+    <GestureHandlerRootView style={{flex: 1}}>
       <AuthProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }} // showOnboarded ? 'Onboarding' : 'Home'
-            initialRouteName={token ? 'Home' : 'FinalizeOnboarding'}>
-            <Stack.Screen name="NotFound" component={NotFoundScreen} />
-            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-            {/* transaction */}
-            <Stack.Screen
-              name="TransactionReceiverCountry"
-              component={NewTransactionCountry}
-            />
-            <Stack.Screen
-              name="TransactionReceiverName"
-              component={NewTransactionName}
-            />
-            <Stack.Screen
-              name="TransactionReceiverPhone"
-              component={NewTransactionPhone}
-            />
-            <Stack.Screen
-              name="TransactionReceiverAddress"
-              component={NewTransactionEmail}
-            />
-            <Stack.Screen
-              name="TransactionPurpose"
-              component={NewTransactionPurpose}
-            />
-            <Stack.Screen
-              name="TransactionAmount"
-              component={NewTransactionAmount}
-            />
-            <Stack.Screen
-              name="TransactionPaymentProof"
-              component={NewTransactionProof}
-            />
-
-            <Stack.Screen name="PaymentReceipt" component={PaymentReceipt} />
-            <Stack.Screen name="AuthHandling" component={AuthHandlingScreen} />
-            <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="ConfirmPhone" component={ConfirmPhone} />
-            <Stack.Screen
-              name="FinalizeOnboarding"
-              component={FinalizeOnboarding}
-            />
-            {/*phone number -> first name, last name -> email + password  -> image */}
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="AddImageID" component={AddImageID} />
-            <Stack.Screen name="AddEmail" component={AddEmail} />
-            <Stack.Screen name="AddAddress" component={AddAddress} />
-            <Stack.Screen name="AddPersonalInfo" component={AddPersonalInfo} />
-            <Stack.Screen name="AddCountry" component={AddCountry} />
-
-            <Stack.Screen name="AddCard" component={AddCard} />
-            <Stack.Screen name="VerifyCard" component={VerifyCard} />
-            <Stack.Screen name="CardSetup" component={CardSetupScreen} />
-            <Stack.Screen name="CardList" component={CardList} />
-            <Stack.Screen
-              name="TransactionDetails"
-              component={TransactionDetailsScreen}
-            />
-            <Stack.Screen
-              name="AccountManagement"
-              component={AccountManagementScreen}
-            />
-            <Stack.Screen
-              name="Notifications"
-              component={NotificationsScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <MainComponent token={token} onboarded={onboarded} />
       </AuthProvider>
-    </>
+    </GestureHandlerRootView>
   );
 };
 

@@ -24,7 +24,7 @@ const SupportScreen = () => {
       .catch(err => console.error('An error occurred', err));
   };
   const openFAQ = () => {
-    const randomFAQ = 'https://www.youtube.com/@WebMindsYT';
+    const randomFAQ = 'https://www.elrasilmobile.com/info';
     Linking.canOpenURL(randomFAQ).then(() => Linking.openURL(randomFAQ));
   };
   return (

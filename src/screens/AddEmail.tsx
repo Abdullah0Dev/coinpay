@@ -25,25 +25,15 @@ const AddEmail: React.FC<EmailProps> = ({route}) => {
   const submit = () => {
     console.log('جاري الإرسال', form);
   };
+  const {password} = form;
 
   return (
     <CustomWrapper progress={45}>
       <HeadInfo
         title={'أضف بريدك الإلكتروني'}
-        subtitle={'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'}
-      />
-      <FormField
-        title="البريد الإلكتروني"
-        value={form.email}
-        setError={setEmailError}
-        error={emailError}
-        handleChangeText={(e: any) => {
-          setEmailError('');
-          setForm({...form, email: e});
-        }}
-        otherStyles="mt-7"
-        keyboardType="email-address"
-        placeholder={`mohammed@ali.com`}
+        subtitle={
+          'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'
+        }
       />
       <FormField
         title="كلمة المرور"
@@ -55,20 +45,22 @@ const AddEmail: React.FC<EmailProps> = ({route}) => {
           setForm({...form, password: e});
         }}
         otherStyles="mt-7"
-        keyboardType="default" 
+        keyboardType="default"
         placeholder={`كلمة المرور`}
       />
       <View className="h-[35vh]" />
       <CustomButton
-         value={ form.password || form.email}
+        value={form.password}
         title="التالى"
         containerStyle={` ${
-          form.email == '' ||  form.password == '' ? 'bg-content-disabled' : 'bg-primary '
+          form.password == '' ? 'bg-content-disabled' : 'bg-primary '
         }  `}
         textStyle={` ${
-          form.email == '' ||  form.password == '' ? 'text-content-tertiary' : ' text-white'
+          form.password == '' ? 'text-content-tertiary' : ' text-white'
         }  `}
-        handlePress={() => navigation.navigate('AddImageID', {...route.params, ...form})}
+        handlePress={() =>
+          navigation.navigate('AddImageID', {...route.params, password})
+        }
       />
     </CustomWrapper>
   );

@@ -5,18 +5,18 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
+  Alert
 } from 'react-native';
-import CountryFlag from 'react-native-country-flag';
-import {CountryPicker, CountryButton} from 'react-native-country-codes-picker';
-import {CustomButton, CustomWrapper, FormField, HeadInfo} from '../components';
+import CountryFlag from 'react-native-country-flag'; 
+import {CountryPickerModal, CustomButton, CustomWrapper, FormField, HeadInfo} from '../components';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
-import axios from 'axios';
-import {CommonActions} from '@react-navigation/native';
+import axios from 'axios'; 
 import {useAuth} from '../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+ 
 
 const SignInScreen: React.FC = () => {
   const navigation =
@@ -30,7 +30,26 @@ const SignInScreen: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [passwordError, setPasswordError] = useState('');
   const [form, setForm] = useState({password: ''});
-  const RealPhoneNumber = countryCode + phoneNumber;
+  const [showPicker, setShowPicker] = useState(false);
+  type SelectedCountry = {
+    name: string;
+    code: string;
+    dialCode: string;
+  } ;
+  
+  const [selectedCountry, setSelectedCountry] = useState<SelectedCountry>({
+    name: "السودان",  // Arabic for Sudan
+    code: "SD",
+    dialCode: "+249",
+  });
+  const RealPhoneNumber = selectedCountry?.dialCode + phoneNumber;
+ 
+
+
+  const handleCountrySelect = (country: SelectedCountry) => {
+    setSelectedCountry(country);
+  };
+
 
   const onSignIn = async () => {
     if (phoneNumber === '' || form.password === '') {
@@ -56,14 +75,21 @@ const SignInScreen: React.FC = () => {
       );
 
       if (response.status !== 200) {
-        const message = `حدث خطأ: ${response.status} - ${response.statusText}`;
+        const message = "بيانات الاعتماد غير صالحة. تأكد من أنك قد أدخلت رقم الهاتف وكلمة المرور بشكل صحيح."
         throw new Error(message);
       }
+      if (response.status === 200) {
+        const data = response.data;
+        const currentTime = new Date().getTime().toString(); // Get current time in milliseconds
 
-      const data = await response.data;
-      await AsyncStorage.setItem('token', data.Token);
-      setRealToken(data.Token); 
-      console.log('user created successfully', data.Token); 
+        // Store token and token creation time
+        await AsyncStorage.setItem('token', data.Token);
+        await AsyncStorage.setItem('tokenCreationTime', currentTime);
+        setToken(data.Token); // Update context token
+        console.log('User signed in successfully', data.Token);
+        navigation.replace('Welcome');
+      }
+      
 
       // navigation.dispatch(
       //   CommonActions.reset({
@@ -74,8 +100,11 @@ const SignInScreen: React.FC = () => {
 
       navigation.replace("Welcome")
     } catch (error: any) {
-      console.error("couldn't sign in the user", error);
-      Alert.alert('Error', error.message || 'Failed to sign in.');
+      console.error("Couldn't sign in the user", error);
+      const errorMessage =
+      error.response?.data?.message || error.message || 'Failed to sign in.';
+    Alert.alert('Error', errorMessage);
+
     } finally {
       setLoading(false);
     }
@@ -83,9 +112,15 @@ const SignInScreen: React.FC = () => {
   useEffect(() => {
     if (realToken) {
       console.log('Updated realToken:', realToken);
-    }  
+    } else {
+      console.log("failed token:", realToken);
+      
+    }
   }, [realToken]);
-
+  useEffect(() => {
+    console.log('Picked one:', countryCode);
+  }, [countryCode]);
+  
   return (
     <CustomWrapper progress={0}>
       <HeadInfo
@@ -97,9 +132,9 @@ const SignInScreen: React.FC = () => {
       <View className="flex flex-row gap-x-1 items-center h-16">
         <TouchableOpacity
           className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
-          onPress={() => setShow(true)}>
-          <CountryFlag isoCode={countryIsoCode} size={20} />
-          <Text className="text-content-secondary text-lg">{countryCode}</Text>
+          onPress={() => setShowPicker(true)}>
+          <CountryFlag isoCode={selectedCountry?.code} size={20} />
+          <Text className="text-content-secondary text-lg">{selectedCountry?.dialCode}</Text> 
         </TouchableOpacity>
 
         <TextInput
@@ -116,23 +151,12 @@ const SignInScreen: React.FC = () => {
         />
       </View>
 
-      <CountryPicker
-        lang="ar"
-        show={show}
-        pickerButtonOnPress={item => {
-          setCountryCode(item.dial_code);
-          setCountryIsoCode(item.code);
-          setShow(false);
-        }}
-        popularCountries={['ar', 'en', 'fr']}
-        style={{
-          modal: {
-            backgroundColor: 'white',
-          },
-          countryName: {color: '#000', fontSize: 18},
-          dialCode: {color: '#000', fontSize: 18},
-        }}
+      <CountryPickerModal
+        show={showPicker}
+        onClose={() => setShowPicker(false)}
+        onSelect={handleCountrySelect}
       />
+
 
       <FormField
         title="كلمة المرور"
@@ -145,7 +169,7 @@ const SignInScreen: React.FC = () => {
         }}
         otherStyles="mt-7"
         keyboardType="default"
-        placeholder={`كلمة المرور`}
+        placeholder={'كلمة المرور'}
       />
 
       <View className="h-[40vh] " />
@@ -177,6 +201,40 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: 'flex-start',
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // semi-transparent background
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  countryName: {
+    color: '#000',
+    fontSize: 18,
+  },
+  dialCode: {
+    color: '#000',
+    fontSize: 18,
+  },
+  closeButton: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#007BFF',
+    fontSize: 16,
+  },
 });
 
 export default SignInScreen;
+

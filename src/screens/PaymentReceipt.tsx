@@ -3,7 +3,7 @@ import React from 'react';
 import {CustomContainer} from '../components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../constants/types';
+import {RootStackParamList, RootTabParamList} from '../constants/types';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {CustomButton, CustomWrapper, HeadInfo} from '../components';
 type ScreenRouteProps = RouteProp<RootStackParamList, 'PaymentReceipt'>;
@@ -14,14 +14,18 @@ type AmountProps = {
 
 const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    useNavigation<
+      NativeStackNavigationProp<RootStackParamList & RootTabParamList>
+    >();
   const {
     RealPhoneNumber,
     address,
     amount,
     name,
+    purpose,
     receiverCountry,
     date,
+    TransactionFees,
     transactionID,
   } = route.params || {};
 
@@ -58,7 +62,7 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
     },
     {
       item: 'رسوم الخدمة',
-      value: '380.00 SSP',
+      value: `${TransactionFees} SGD`,
     },
     {
       item: 'رقم الهاتف',
@@ -118,37 +122,36 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
           )}
         />
       </View>
-      <View className='w-full items-center justify-center'>
-      <CustomButton
-        title="الصفحة الرئيسية"
-          handlePress={() => navigation.navigate("Home")}
-         /*
-
-        receiverCountry: string;
-        name: string;
-        RealPhoneNumber: string;
-        address: string;
-        purpose: string;
-        amount: string;
-        date: string;
-        transactionID: string;
-
-        _____
-                receiverCountry: string;
-        name: string;
-        RealPhoneNumber: string;
-        address: string;
-        purpose: string;
-        amount: string;
-        date: string;
-        transactionID: string;
-         */
-         containerStyle={`bg-primary` }
-        textStyle={` text-white `}
-      />
+      <View className="w-full items-center justify-center">
+        <CustomButton
+          title="الصفحة الرئيسية"
+          handlePress={() =>
+            navigation.navigate('HomeTab', {
+              receiverCountry,
+              name,
+              RealPhoneNumber,
+              address,
+              purpose,
+              amount,
+              date,
+              transactionID,
+              TransactionFees,
+            })
+          }
+          containerStyle={`bg-primary`}
+          textStyle={` text-white `}
+        />
+        {/* 
+Argument of type '["Home", { receiverCountry?: string | undefined; name?: string | undefined; RealPhoneNumber?: string | undefined; address?: string | undefined; purpose?: string | undefined; amount?: string | undefined; date?: string | undefined; TransactionFees?: number | undefined; transactionID?: string | undefined; }]' is not assignable to parameter of type '[screen: "Home"] | [screen: "Home", params: { receiverCountry: string; name: string; RealPhoneNumber: string; address: string; purpose: string; amount: string; date: string; transactionID: string; TransactionFees: number; } | undefined]'.
+  Type '["Home", { receiverCountry?: string | undefined; name?: string | undefined; RealPhoneNumber?: string | undefined; address?: string | undefined; purpose?: string | undefined; amount?: string | undefined; date?: string | undefined; TransactionFees?: number | undefined; transactionID?: string | undefined; }]' is not assignable to type '[screen: "Home", params: { receiverCountry: string; name: string; RealPhoneNumber: string; address: string; purpose: string; amount: string; date: string; transactionID: string; TransactionFees: number; } | undefined]'.
+    Type at position 1 in source is not compatible with type at position 1 in target.
+      The types of 'receiverCountry' are incompatible between these types.
+        Type 'string | undefined' is not assignable to type 'string'.
+          Type 'undefined' is not assignable to type 'string'.
+        */}
       </View>
       <StatusBar backgroundColor={'#F7F7F7'} barStyle={'dark-content'} />
-    </CustomContainer>  
+    </CustomContainer>
   );
 };
 

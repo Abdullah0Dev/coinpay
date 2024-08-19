@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Easing,
+  KeyboardAvoidingView, Platform 
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import icons from '../constants/icons';

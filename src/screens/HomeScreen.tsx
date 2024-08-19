@@ -65,7 +65,7 @@ const TabItem: React.FC<TabBarItemProps> = ({name, focused}) => {
     <View className="flex flex-col items-center">
       <View className="  rounded-md p-4 items-center justify-center flex">
         {IconComponent}
-         </View>
+      </View>
       {focused && (
         <View className="p-1 absolute bottom-[5px] rounded-full bg-[#304FFF]" />
       )}
@@ -105,20 +105,22 @@ const HomeScreen = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingBottom: 20, // Adjust this value to control the floating effect
+    paddingBottom: 10, // Adjust this value to control the floating effect
   },
   tabBar: {
     backgroundColor: 'white',
     height: 70,
     borderRadius: 15,
-    position: 'absolute', 
+    position: 'absolute',
     bottom: 20, // Adjust this value to control the floating effect
+    alignItems: 'center', // Ensure items are centered vertically
+    justifyContent: 'center',
+    paddingBottom: 5, // Adjust this if needed to avoid clipping
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,

@@ -5,7 +5,7 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../constants/types';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import {useAuth} from '../context/AuthContext';
 
 type ScreenRouteProps = RouteProp<
   RootStackParamList,
@@ -25,7 +25,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
     amount: '',
     password: '',
   });
-  const {token} = useAuth()
+  const {token} = useAuth();
   const [commission, setCommission] = useState(0);
   const [rate, setRate] = useState(0);
   const conversionRate = 0.0017; // Conversion rate from SDG to USD
@@ -58,10 +58,10 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
         // Add color based on PaymentStatus
 
         if (commissionResponse.data) {
-          setCommission(commissionResponse.data.commission * conversionRate);
+          setCommission(commissionResponse.data.commission);
         }
         if (rateResponse.data) {
-          setRate(rateResponse.data.rate * conversionRate);
+          setRate(rateResponse.data.rate);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -70,11 +70,14 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
 
     fetchData();
   }, [commission, rate]);
+  console.log(commission);
 
   // total amount
   const {amount} = form;
   const numAmount = Number(amount);
   const Total = numAmount * rate + numAmount * rate * commission;
+  const TransactionFees = numAmount * rate * commission;
+  console.log(`Transaction fees`, TransactionFees);
 
   const submit = () => {
     console.log('submitting', form);
@@ -109,7 +112,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
       <View className="flex flex-row  w-52 ">
         <Text className="text-xl font-bold text-content-primary"> Total: </Text>
         <Text className="text-xl font-semibold text-content-tertiary">
-          {' '}
+          {' SDG '}
           {Total}{' '}
         </Text>
       </View>
@@ -127,6 +130,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
           navigation.navigate('TransactionPaymentProof', {
             ...route.params,
             amount: form.amount,
+            TransactionFees,
           })
         }
       />
