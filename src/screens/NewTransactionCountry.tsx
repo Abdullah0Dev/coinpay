@@ -23,15 +23,15 @@ const NewTransactionCountry = () => {
   } | null>(null);
 
   const countries = [
-    {name: 'مصر', code: 'EG'},
-    {name: 'تركيا', code: 'TR'},
-    {name: 'الهند', code: 'IN'},
-    {name: 'الباكستان', code: 'PK'},
-    {name: 'بنغلاديش', code: 'BD'},
-    {name: 'الفلبين', code: 'PH'},
-    {name: 'الامارات', code: 'AE'},
-    {name: 'الصين', code: 'CN'},
-    {name: 'اندنوسيا', code: 'ID'},
+    {name: 'Egypt', code: 'EG'},
+    {name: 'Turkey', code: 'TR'},
+    {name: 'India', code: 'IN'},
+    {name: 'Pakistan', code: 'PK'},
+    {name: 'Bangladesh', code: 'BD'},
+    {name: 'philippines', code: 'PH'},
+    {name: 'Uae', code: 'AE'},
+    {name: 'China', code: 'CN'},
+    {name: 'Indonesia', code: 'ID'},
   ];
 
   
@@ -48,9 +48,9 @@ const NewTransactionCountry = () => {
   return (
     <CustomWrapper progress={1}>
       <HeadInfo
-        title={'بلد المستلم'}
+        title={'Reciver Country '}
         subtitle={
-          'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
+          ''
         }
       />
       {/* Select country */}
@@ -97,7 +97,7 @@ const NewTransactionCountry = () => {
       <View className="h-[61%]" />
       <CustomButton
           value={form.country}
-        title="استمرار"
+        title="Next"
         containerStyle={` ${
           form.country === '' ? 'bg-content-disabled' : 'bg-primary'
         } `}
