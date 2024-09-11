@@ -22,7 +22,7 @@ const NotFoundScreen = () => {
         <View className="mx-2 flex  flex-col items-center justify-center ">
           {/* title */}
           <Text className="text-4xl text-center text-content-primary font-bold">
-            خطأ 404 {"\n"} الصفحة غير موجودة
+            خطأ 404 {"\n"} Page Not Found
           </Text>
           {/* description */}
           <Text className="text-base text-center mt-2  text-content-tertiary ">
