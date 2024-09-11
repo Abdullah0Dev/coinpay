@@ -20,10 +20,10 @@ const AuthHandlingScreen = () => {
       {/* title */}
       <View className="mx-2 items-center">
         <Text className="text-3xl  text-center text-content-primary font-semibold">
-          Create your Coinpay account
+          Create your Elrasil account
         </Text>
         <Text className="text-lg text-center  text-content-secondary font-semibold">
-          Coinpay is a powerful tool that allows you to easily send, receive,
+          Elrasil is a powerful tool that allows you to easily send, receive,
           and track all your transactions
         </Text>
       </View>
