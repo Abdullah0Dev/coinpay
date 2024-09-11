@@ -19,30 +19,30 @@ const FinalizeOnboarding = () => {
       {/* title */}
       <View className="mx-2 items-center">
         <Text className="text-3xl text-center text-content-primary font-semibold">
-          أنشئ حسابك في الراسل
+          Create your Elrasil account
         </Text>
         <Text className="text-lg text-center text-content-secondary font-semibold">
-          الراسل هو أداة قوية تتيح لك بسهولة إرسال واستقبال وتتبع جميع معاملاتك
+          Elrasil is a powerfull tool that gives you the ability to manage your transactions seamlessly
         </Text>
       </View>
       <View className="w-full self-center items-center ">
         <CustomButton
           containerStyle=" bg-primary "
           handlePress={() =>navigation.replace('SignUp')}
-          title="انشاء حساب"
+          title="Create an account "
         />
         <CustomButton 
           containerStyle=" bg-white border-primary/50 border-2 mt-5"
           textStyle="text-primary"
           handlePress={() => navigation.replace('SignIn')}
-          title="تسجيل الدخول"
+          title=" Login"
         />
       </View>
       <View className="">
         <Text className="text-lg text-center text-content-tertiary font-semibold ">
           من خلال المتابعة، أنت تقبل{' '}
-          <Text className="text-primary underline"> شروط الخدمة </Text> و{' '}
-          <Text className="text-primary underline"> سياسة الخصوصية </Text>
+          <Text className="text-primary underline"> term of use </Text> و{' '}
+          <Text className="text-primary underline"> privacy policy  </Text>
         </Text>
       </View>
     </View>     
