@@ -23,7 +23,7 @@ const AddEmail: React.FC<EmailProps> = ({route}) => {
     password: '',
   });
   const submit = () => {
-    console.log('جاري الإرسال', form);
+    console.log('sending', form);
   };
   const {password} = form;
 
