@@ -122,7 +122,7 @@ const TransactionsTab = () => {
     <CustomContainer>
       <Text className="text-content-primary text-2xl text-center my-3 font-bold ">
         {' '}
-        آخر التحويلات{' '}
+        Latest Transactions{' '}
       </Text>
       <StatusBar backgroundColor={'#FFFFFF'} barStyle={'dark-content'} />
       <FlatList

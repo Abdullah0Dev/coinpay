@@ -38,7 +38,7 @@ const SignInScreen: React.FC = () => {
   } ;
   
   const [selectedCountry, setSelectedCountry] = useState<SelectedCountry>({
-    name: "السودان",  // Arabic for Sudan
+    name: "Sudan",  // Arabic for Sudan
     code: "SD",
     dialCode: "+249",
   });
@@ -75,7 +75,7 @@ const SignInScreen: React.FC = () => {
       );
 
       if (response.status !== 200) {
-        const message = "بيانات الاعتماد غير صالحة. تأكد من أنك قد أدخلت رقم الهاتف وكلمة المرور بشكل صحيح."
+        const message = "Wrong cerdentials"
         throw new Error(message);
       }
       if (response.status === 200) {
@@ -124,11 +124,11 @@ const SignInScreen: React.FC = () => {
   return (
     <CustomWrapper progress={0}>
       <HeadInfo
-        title={'   تسجيل الدخول إلى حسابك!'}
-        subtitle={'  أدخل رقم هاتفك وكلمة المرور الخاصة بك!'}
+        title={'Login to your account'}
+        subtitle={'Enter your phone number and password'}
       />
 
-      <Text style={styles.label}>الهاتف</Text>
+      <Text style={styles.label}>Phone</Text>
       <View className="flex flex-row gap-x-1 items-center h-16">
         <TouchableOpacity
           className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
@@ -139,7 +139,7 @@ const SignInScreen: React.FC = () => {
 
         <TextInput
           className="flex-1 bg-white border py-4 border-black/40 rounded-xl px-2 text-lg text-content-primary"
-          placeholder="رقم الهاتف المحمول"
+          placeholder="Phone Number"
           placeholderTextColor={'#00000071'}
           keyboardType="numeric"
           value={phoneNumber}

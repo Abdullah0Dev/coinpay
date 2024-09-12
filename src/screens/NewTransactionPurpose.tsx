@@ -29,11 +29,11 @@ const NewTransactionPurpose: React.FC<PhoneProps> = ({route}) => {
   return (
     <CustomWrapper progress={70}>
       <HeadInfo
-        title={'ما هو الغرض من هذه المعاملة؟'}
-        subtitle={'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'}
+        title={'What is the purpose of this transaction'}
+        subtitle={'.'}
       />
       <FormField
-        title="الغرض"
+        title="Purpose"
         value={form.purpose}
         setError={setPurposeError}
         error={purposeError}
@@ -43,12 +43,12 @@ const NewTransactionPurpose: React.FC<PhoneProps> = ({route}) => {
         }}
         otherStyles="mt-7"
         keyboardType="default"
-        placeholder={`دفع الفاتورة، رسوم المدرسة، إلخ`}
+        placeholder={`Family support , Education fesss etc...`}
       />
       <View className="h-[49vh]" />
       <CustomButton
          value={form.purpose || form.password}
-        title="استمرار"
+        title="Next"
         containerStyle={` ${
           form.purpose == '' ? 'bg-content-disabled' : 'bg-primary '
         }  `}

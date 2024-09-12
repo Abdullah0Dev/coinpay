@@ -23,7 +23,7 @@ const WelcomeScreen = () => {
         <View className="mx-2 flex  flex-col items-center justify-center ">
           {/* title */}
           <Text className="text-4xl text-center text-content-primary font-bold">
-            تهانينا! {"\n"} مرحبًا بك في الراسل
+            Wellecome to ELRASIL {"\n"} 
           </Text>
           {/* description */}
           <Text className='text-base text-center mt-2  text-content-tertiary font-semibold'> نحن سعداء بوجودك، حان الوقت لإرسال واستقبال وتتبع نفقاتك </Text>

@@ -86,13 +86,13 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
   return (
     <CustomWrapper progress={80}>
       <HeadInfo
-        title={'ما هو المبلغ من هذه المعاملة؟'}
+        title={'What is the purpose of this transaction'}
         subtitle={
-          'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
+          'This information help facilitating your transaction'
         }
       />
       <FormField
-        title="المبلغ"
+        title="The Amount"
         value={form.amount}
         setError={setAmountError}
         error={amountError}

@@ -42,25 +42,25 @@ const SupportScreen = () => {
         {/* title */}
         <View className="mx-2 items-center">
           <Text className="text-4xl  text-center text-content-primary font-semibold">
-            دعم الراسل
+            Elrasil Support
           </Text>
           <Text
             className="text-lg text-center 
          text-content-secondary font-normal">
-            فريقنا المخصص هنا لمساعدتك في أي أسئلة أو مشاكل تتعلق بتطبيق الراسل.
+            Our dedicated team is available if you have any questions about ELRASIL app .
           </Text>
         </View>
         <View className="w-full self-center items-center ">
           <CustomButton
             containerStyle=" bg-primary "
             handlePress={openWhatsApp}
-            title="ابدأ المحادثة"
+            title="Start conversation"
           />
           <CustomButton
             containerStyle=" bg-transparent border-primary/50 border-2 mt-5"
             textStyle="text-primary"
             handlePress={openFAQ}
-            title="عرض الأسئلة الشائعة"
+            title="View FAQs"
           />
         </View>
       </View>

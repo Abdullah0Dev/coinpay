@@ -28,11 +28,11 @@ const NewTransactionName: React.FC<NameProps> = ({route}) => {
   return (
     <CustomWrapper progress={15}>
       <HeadInfo
-        title={'اسم المستلم'}
-        subtitle={'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'}
+        title={'Reciver Name'}
+        subtitle={''}
       />
       <FormField
-        title="الاسم"
+        title="Name"
         value={form.name}
         setError={setNameError}
         error={nameError}
@@ -42,12 +42,12 @@ const NewTransactionName: React.FC<NameProps> = ({route}) => {
         }}
         otherStyles="mt-7"
         keyboardType="default"
-        placeholder={`جون دو`}
+        placeholder={`  Name`}
       />
       <View className="h-[49vh]" />
       <CustomButton
           value={form.name || form.password}
-        title="استمرار"
+        title="Next"
         containerStyle={` ${
           form.name == '' ? 'bg-content-disabled' : 'bg-primary '
         }  `}

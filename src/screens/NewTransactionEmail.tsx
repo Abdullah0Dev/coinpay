@@ -29,11 +29,11 @@ const NewTransactionEmail: React.FC<PhoneProps> = ({route}) => {
   return (
     <CustomWrapper progress={35}>
       <HeadInfo
-        title={'عنوان المستلم'}
-        subtitle={'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'}
+        title={'Reciver Address '}
+        subtitle={''}
       />
       <FormField
-        title="العنوان"
+        title="Address"
         value={form.address}
         setError={setAddressError}
         error={addressError}
@@ -43,12 +43,12 @@ const NewTransactionEmail: React.FC<PhoneProps> = ({route}) => {
         }}
         otherStyles="mt-7"
         keyboardType="default"
-        placeholder={`مصر، القاهرة، مدينة نصر`}
+        placeholder={`Khartoum, burri`}
       />
       <View className="h-[49vh]" />
       <CustomButton
           value={form.address || form.password}
-        title="استمرار"
+        title="Next"
         containerStyle={` ${
           form.address == '' ? 'bg-content-disabled' : 'bg-primary '
         }  `}
