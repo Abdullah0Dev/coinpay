@@ -32,7 +32,7 @@ const ListHeaderComponent: React.FC<ListHeaderComponentProps> = ({
   return ( 
       <View style={{paddingVertical: 39}}>
         <Text style={{color: '#000', fontSize: 24, fontWeight: 'bold'}}>
-          الدول الشائعة
+          Countries
         </Text>
         {countries?.map((country, index) => (
           <CountryButton
@@ -67,7 +67,7 @@ const SignUpScreen: React.FC = () => {
   } ;
   
   const [selectedCountry, setSelectedCountry] = useState<SelectedCountry>({
-    name: "السودان",  // Arabic for Sudan
+    name: "Sudan",  // Arabic for Sudan
     code: "SD",
     dialCode: "+249",
   });
@@ -82,7 +82,7 @@ const SignUpScreen: React.FC = () => {
 
   const onSignup = () => {
     setConfirmNumber(true);
-    console.log('التسجيل');
+    console.log('Register');
   };
 
   const handleRegister = () => {
@@ -94,10 +94,10 @@ const SignUpScreen: React.FC = () => {
     <>
       <CustomWrapper progress={0}>
         <HeadInfo
-          title={'إنشاء حساب '}
-          subtitle={' أدخل رقم هاتفك لتأمين حسابك'}
+          title={'Create an acount'}
+          subtitle={'Enter your valid Phone Number'}
         />
-        <Text style={styles.label}>الهاتف</Text>
+        <Text style={styles.label}>Phone</Text>
         <View className="flex flex-row gap-x-1 items-center h-16">
         <TouchableOpacity
           className="flex bg-white border py-4 border-black/40 rounded-xl px-2 flex-row items-center gap-x-2 "
@@ -108,7 +108,7 @@ const SignUpScreen: React.FC = () => {
 
           <TextInput
             className="flex-1 bg-white border py-4 border-black/40 rounded-xl px-2 text-lg text-content-primary"
-            placeholder="رقم الجوال"
+            placeholder="Phone Number"
             placeholderTextColor={'#00000071'}
             keyboardType="numeric"
             maxLength={10}
@@ -133,7 +133,7 @@ const SignUpScreen: React.FC = () => {
 
         <CustomButton
           value={phoneNumber}
-          title="التسجيل"
+          title="Refister"
           containerStyle={`${
             phoneNumber === '' ? 'bg-content-disabled' : 'bg-primary'
           }`}
@@ -148,21 +148,21 @@ const SignUpScreen: React.FC = () => {
           <View className="p-5 bg-white w-[90%] rounded-2xl justify-center items-center">
             <Image source={images.onboardImage1} resizeMode="contain" />
             <Text className="text-content-primary text-2xl font-bold text-center mx-2">
-              هل أنت متأكد أنك تريد استخدام هذا الرقم؟
+              Are you sure you want to use this number?
             </Text>
             <Text className="text-content-tertiary text-base font-semibold text-center mx-2">
-              هل هذا صحيح؟{' '}
+              Is this correct ?{' '}
               <Text className="text-extrabold text-content-secondary text-lg">
                 {phoneNumber}
               </Text>
             </Text>
             <CustomButton
-              title="نعم، هو كذلك"
+              title="Yes it is"
               containerStyle="bg-primary mt-5"
               handlePress={handleRegister}
             />
             <CustomButton
-              title="لا، عدل"
+              title="No, Edit"
               containerStyle="bg-white border-primary/50 border-2 mt-2"
               textStyle="text-primary"
               handlePress={() => setConfirmNumber(false)}
