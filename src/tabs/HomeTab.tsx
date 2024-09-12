@@ -183,7 +183,7 @@ const HomeTab: React.FC<AmountProps> = ({ route }) => {
           <Text className="text-white font-bold text-clip text-4xl mt-4">
             SDG {rate}
           </Text>
-          <Text className="text-white">سعر الصرف</Text>
+          <Text className="text-white">Exchange Rate</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('TransactionReceiverCountry')}
             className="flex flex-row gap-x-2 items-center mt-2 bg-transparent border-2 border-white p-3 rounded-full">
@@ -194,7 +194,7 @@ const HomeTab: React.FC<AmountProps> = ({ route }) => {
       </View>
       <View className="flex flex-row justify-between items-center mb-3 ml-5 mr-2 mt-5">
         <Text className="text-content-secondary text-2xl font-semibold">
-          المعاملات
+          Transactions
         </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('TransactionsTab')}>
