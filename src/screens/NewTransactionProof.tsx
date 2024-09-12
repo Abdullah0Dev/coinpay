@@ -136,9 +136,9 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
   return (
     <CustomWrapper progress={100}>
       <HeadInfo
-        title={'قم بتحميل صورة إثبات الدفع!'}
+        title={'Upload the proof of payment'}
         subtitle={
-          'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
+          ''
         }
       />
       <TouchableOpacity
@@ -158,7 +158,7 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
           <View className="flex flex-col gap-y-1 items-center justify-center">
             <AntDesign name="upload" color={'#0A7AFF'} size={32} />
             <Text className={'text-xl text-black '}>
-              قم بتحميل صورة الهوية الخاصة بك
+              Please upload the proof of payment
             </Text>
           </View>
         )}
@@ -166,7 +166,7 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
       <View className="h-[33vh]" />
       <CustomButton
         value={idImage?.uri}
-        title="التالى"
+        title="Next"
         containerStyle={` ${
           !idImage ? 'bg-content-disabled' : 'bg-primary '
         }  `}
