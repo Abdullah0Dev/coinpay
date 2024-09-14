@@ -1,4 +1,4 @@
-package com.coinpay
+package com.coinpayalrasel
 import android.os.Bundle; // here
 import com.rnfs.RNFSPackage; 
 // react-native-splash-screen >= 0.3.1

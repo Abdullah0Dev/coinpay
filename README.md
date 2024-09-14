@@ -24,4 +24,6 @@ __
 "react-native-vector-icons"
 ___build apk____
 1. password: 123456
+
+__> https://github.com/AakashKavediya/RemindMe
 -->

@@ -116,6 +116,7 @@ const NewTransactionAmount: React.FC<PhoneProps> = ({route}) => {
           {Total}{' '}
         </Text>
       </View>
+      <Text className='text-base font-semibold text-content-tertiary'>Please send the amount to mBOK account number 1385882</Text>
       <View className="h-[48vh]" />
       <CustomButton
         value={form.amount || form.password}

@@ -46,7 +46,7 @@ const NewTransactionProof: React.FC<EmailProps> = ({route}) => {
     setLoading(true);
     const options: ImageLibraryOptions = {
       mediaType: 'photo',
-      quality: 1,
+      quality: 0.5,
     };
     launchImageLibrary(options, async response => {
       if (!response.didCancel && !response.errorCode && response.assets) {
