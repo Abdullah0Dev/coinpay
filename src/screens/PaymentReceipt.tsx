@@ -31,45 +31,45 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
 
   /**
      
-العنوان
-المبلغ
-الاسم
-البلد
-تاريخ المعاملة
+Address
+Amount
+Name
+Country
+Transaction date
      */
   const formattedDate = date?.split('T')[0];
 
   const PaymentReceiptData = [
     {
-      item: 'تاريخ المعاملة',
+      item: 'Transaction date',
       value: formattedDate,
     },
     {
-      item: 'الاسم',
+      item: 'Name',
       value: name,
     },
     {
-      item: 'العنوان',
+      item: 'Address',
       value: address,
     },
     {
-      item: 'البلد',
+      item: 'Country',
       value: receiverCountry,
     },
     {
-      item: 'المبلغ',
+      item: 'Amount',
       value: amount,
     },
     {
-      item: 'رسوم الخدمة',
+      item: 'Transaction fees',
       value: `${TransactionFees} SGD`,
     },
     {
-      item: 'رقم الهاتف',
+      item: 'Phone',
       value: RealPhoneNumber,
     },
     {
-      item: 'رقم الرمز',
+      item: 'TransactionID',
       value: transactionID,
     },
   ];
@@ -82,13 +82,13 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
           <AntDesign name="check" size={28} color="#FFFFFF" />
         </View>
         <Text className="text-content-success text-2xl font-bold uppercase">
-          تمت العملية بنجاح
+          Transaction Sent
         </Text>
       </View>
       {/* Receipt Data */}
       <View className="bg-white rounded-2xl py-5 my-9 mx-5">
         <Text className="text-content-primary mb-4 text-center text-2xl font-semibold">
-          إيصال دفع {name}
+          Payment Reciept {name}
         </Text>
 
         <FlatList
@@ -97,9 +97,9 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
           renderItem={({item}) => (
             <View
               className={`flex flex-row flex-wrap ${
-                item.item === 'رقم الرمز' && 'flex-col flex-nowrap'
+                item.item === 'TransactionID' && 'flex-col flex-nowrap'
               } justify-between px-5 py-3`}>
-              {item.item === 'رقم الرمز' && (
+              {item.item === 'TransactionID' && (
                 <Text className="text-content-primary font-bold text-xl">
                   {item.item}
                 </Text>
@@ -110,7 +110,7 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
                 }`}>
                 {item.value}
               </Text>
-              {item.item !== 'رقم الرمز' && (
+              {item.item !== 'TransactionID' && (
                 <Text className="text-content-primary font-bold text-xl">
                   {item.item}
                 </Text>
@@ -124,7 +124,7 @@ const PaymentReceipt: React.FC<AmountProps> = ({route}) => {
       </View>
       <View className="w-full items-center justify-center">
         <CustomButton
-          title="الصفحة الرئيسية"
+          title="Home Page"
           handlePress={() =>
             navigation.navigate('HomeTab', {
               receiverCountry,
