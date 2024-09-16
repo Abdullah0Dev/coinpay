@@ -23,20 +23,20 @@ const AddEmail: React.FC<EmailProps> = ({route}) => {
     password: '',
   });
   const submit = () => {
-    console.log('جاري الإرسال', form);
+    console.log('sending', form);
   };
   const {password} = form;
 
   return (
     <CustomWrapper progress={45}>
       <HeadInfo
-        title={'أضف بريدك الإلكتروني'}
+        title={'Please Add Your Email'}
         subtitle={
-          'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'
+          'This Information Must Be Accurate'
         }
       />
       <FormField
-        title="كلمة المرور"
+        title="Password"
         value={form.password}
         setError={setPasswordError}
         error={passwordError}
@@ -46,12 +46,12 @@ const AddEmail: React.FC<EmailProps> = ({route}) => {
         }}
         otherStyles="mt-7"
         keyboardType="default"
-        placeholder={`كلمة المرور`}
+        placeholder={` Password`}
       />
       <View className="h-[35vh]" />
       <CustomButton
         value={form.password}
-        title="التالى"
+        title="Next"
         containerStyle={` ${
           form.password == '' ? 'bg-content-disabled' : 'bg-primary '
         }  `}
