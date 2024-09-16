@@ -34,20 +34,20 @@ const AddPersonalInfo: React.FC<PersonalInfoProps> = ({route}) => {
   };
 
   const submit = () => {
-    console.log('جاري الإرسال', form);
+    console.log('sending', form);
   };
 
   return (
     <>
       <CustomWrapper progress={20}>
         <HeadInfo
-          title={'أضف معلوماتك الشخصية'}
+          title={'Add your personal information'}
           subtitle={
-            'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'
+            'This information must be compatIple with your ID'
           }
         />
         <FormField
-          title="الاسم الأول"
+          title="FirstName"
           value={form.firstName}
           setError={setNameError}
           error={nameError}
@@ -57,10 +57,10 @@ const AddPersonalInfo: React.FC<PersonalInfoProps> = ({route}) => {
           }}
           otherStyles="mt-7"
           keyboardType="text"
-          placeholder={`محمد`}
+          placeholder={`firstname`}
         />
         <FormField
-          title="اسم العائلة"
+          title="Family Name"
           value={form.lastName}
           setError={setUsernameError}
           error={usernameError}
@@ -70,11 +70,11 @@ const AddPersonalInfo: React.FC<PersonalInfoProps> = ({route}) => {
           }}
           otherStyles="mt-7"
           keyboardType="text"
-          placeholder={`علي`}
+          placeholder={`lastName`}
         />
         {/* <TouchableOpacity onPress={() => setShowCalendar(true)}>
           <FormField
-            title="تاريخ الميلاد"
+            title="BirthDate"
             value={form.birthDate}
             setError={setBirthDateError}
             error={birthDateError}
