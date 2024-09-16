@@ -82,12 +82,12 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
       );
 
       if (response.status !== 200) {
-        const message = "المستخدم موجود بالفعل. تأكد من أنك قد أدخلت رقم هاتف مخصص واسم مستخدم مخصص.";
+        const message = "User already exists, Please make sure you enter a uniqe number";
         throw new Error(message);
       }
 
       const data = response.data;
-      console.log('تم إنشاء المستخدم بنجاح:', data);
+      console.log('User created successfuly:', data);
       // After successful sign up
       navigation.dispatch(
         CommonActions.reset({
@@ -109,9 +109,9 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
   return (
     <CustomWrapper progress={60}>
       <HeadInfo
-        title={'قم بتحميل صورة لوثيقة الهوية الخاصة بك'}
+        title={'Please upload a valid ID'}
         subtitle={
-          'يجب أن تكون هذه المعلومات دقيقة وفقًا لوثيقة الهوية الخاصة بك.'
+          'This information must be accurate'
         }
       />
       <TouchableOpacity
@@ -131,14 +131,14 @@ const AddImageID: React.FC<ImageProps> = ({route}) => {
           <View className="flex flex-col gap-y-1 items-center justify-center">
             <AntDesign name="upload" color={'#0A7AFF'} size={32} />
             <Text className={'text-xl text-black '}>
-              قم بتحميل صورة الهوية الخاصة بك
+              Upload your ID
             </Text>
           </View>
         )}
       </TouchableOpacity>
       <View className="h-[35vh]" />
       <CustomButton 
-        title="التالى"
+        title="Next"
         containerStyle={` ${
           !idImage ? 'bg-content-disabled' : 'bg-primary '
         }  `}
