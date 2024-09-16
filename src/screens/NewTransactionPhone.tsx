@@ -31,7 +31,7 @@ const ListHeaderComponent: React.FC<ListHeaderComponentProps> = ({
   return (
     <View style={{paddingBottom: 20}}>
       <Text style={{color: '#000', fontSize: 24, fontWeight: 'bold'}}>
-        الدول الشهيرة
+        Countries
       </Text>
       {countries?.map((country, index) => (
         <CountryButton
@@ -75,7 +75,7 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
   } ;
   
   const [selectedCountry, setSelectedCountry] = useState<SelectedCountry>({
-    name: "السودان",  // Arabic for Sudan
+    name: "Sudan",  // Arabic for Sudan
     code: "SD",
     dialCode: "+249",
   });
@@ -100,13 +100,13 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
         behavior="padding"
         keyboardVerticalOffset={keyboardVerticalOffset}>
         <HeadInfo
-          title={'رقم الهاتف للمستلم'}
+          title={'Reciver Phone'}
           subtitle={
-            'تساعد هذه المعلومات على ضمان وصول مدفوعاتك إلى الشخص الرئيسي.'
+            ''
           }
         />
         <View style={{paddingTop: 20}}>
-          <Text style={styles.label}>الهاتف</Text>
+          <Text style={styles.label}>Phone</Text>
           <View className="flex flex-row gap-x-1 items-center h-16">
             {/* Country Code TextInput */}
             <TouchableOpacity
@@ -119,7 +119,7 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
             {/* Phone Number TextInput */}
             <TextInput
               className="flex-1 bg-white border py-4 border-black/40 rounded-xl px-2 text-lg text-content-primary"
-              placeholder="رقم الهاتف المحمول"
+              placeholder="Phone"
               placeholderTextColor={'#00000071'}
               keyboardType="numeric"
               value={phoneNumber}
@@ -146,7 +146,7 @@ const NewTransactionPhone: React.FC<PhoneProps> = ({route}) => {
           {/* Sign up button */}
           <CustomButton
             value={phoneNumber}
-            title="استمرار"
+            title="Next"
             containerStyle={` ${
               phoneNumber == '' ? 'bg-content-disabled' : 'bg-primary '
             }  `}
